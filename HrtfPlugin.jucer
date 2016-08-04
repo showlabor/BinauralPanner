@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="TEt90m" name="BinauralPanner" projectType="audioplug" version="1.0.0"
+              bundleIdentifier="com.wingsplugins.binauralpanner" includeBinaryInAppConfig="1"
+              buildVST="1" buildVST3="0" buildAU="1" buildAUv3="0" buildRTAS="0"
+              buildAAX="0" pluginName="BinauralPanner" pluginDesc="BinauralPanner"
+              pluginManufacturer="WingsPlugins" pluginManufacturerCode="Manu"
+              pluginCode="Tet9" pluginChannelConfigs="" pluginIsSynth="0" pluginWantsMidiIn="0"
+              pluginProducesMidiOut="0" pluginIsMidiEffectPlugin="0" pluginEditorRequiresKeys="0"
+              pluginAUExportPrefix="BinauralPannerAU" pluginRTASCategory=""
+              aaxIdentifier="com.wingsplugins.BinauralPanner" pluginAAXCategory="AAX_ePlugInCategory_Dynamics"
+              jucerVersion="4.2.3" pluginVSTCategory="">
+  <MAINGROUP id="umqMW9" name="BinauralPanner">
+    <GROUP id="{A0F5A324-FED4-FC3C-8935-7090E88E0EB8}" name="Source">
+      <FILE id="HQmfXe" name="PluginProcessor.cpp" compile="1" resource="0"
+            file="Source/PluginProcessor.cpp"/>
+      <FILE id="jmnHwb" name="PluginProcessor.h" compile="0" resource="0"
+            file="Source/PluginProcessor.h"/>
+      <FILE id="o1cpjb" name="PluginEditor.cpp" compile="1" resource="0"
+            file="Source/PluginEditor.cpp"/>
+      <FILE id="jscnnT" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <LINUX_MAKE targetFolder="Builds/LinuxMakefile" vstFolder="" extraLinkerFlags="-lfftw3f -lm">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
+                       targetName="BinauralPanner"/>
+        <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/" isDebug="0" optimisation="3"
+                       targetName="BinauralPanner"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_events" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_video" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_opengl" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../../../juce/modules"/>
+      </MODULEPATHS>
+    </LINUX_MAKE>
+    <CODEBLOCKS_LINUX targetFolder="Builds/CodeBlocksLinux">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="HrtfPlugin"/>
+        <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="HrtfPlugin"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_events" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_video" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_opengl" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../../../juce/modules"/>
+      </MODULEPATHS>
+    </CODEBLOCKS_LINUX>
+    <XCODE_MAC targetFolder="Builds/MacOSX" vstFolder="" extraLinkerFlags="-lfftw3f -lm">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="BinauralPanner"
+                       headerPath="/usr/local/include" libraryPath="/usr/local/lib"/>
+        <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="BinauralPanner"
+                       headerPath="/usr/local/include" libraryPath="/usr/local/lib"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_video" path="../../../juce/modules"/>
+        <MODULEPATH id="juce_opengl" path="../../../juce/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../../juce/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../juce/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../../juce/modules"/>
+        <MODULEPATH id="juce_events" path="../../../juce/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../juce/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../../../juce/modules"/>
+        <MODULEPATH id="juce_core" path="../../../juce/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../../juce/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../../juce/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../../juce/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../../juce/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../../../juce/modules"/>
+      </MODULEPATHS>
+    </XCODE_MAC>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_cryptography" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_video" showAllCode="1" useLocalCopy="0"/>
+  </MODULES>
+  <JUCEOPTIONS JUCE_QUICKTIME="disabled"/>
+  <LIVE_SETTINGS>
+    <LINUX/>
+  </LIVE_SETTINGS>
+</JUCERPROJECT>
