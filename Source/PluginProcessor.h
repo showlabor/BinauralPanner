@@ -76,7 +76,7 @@ private:
     Array<float> rightPreviousOutput,leftPreviousOutput;
     Array<float> *leftHrirArray,*rightHrirArray,*leftInterpHrirArray,*rightInterpHrirArray;
 
-    fftwf_complex *inputSignal, *leftHRIR, *rightHRIR, *leftInterpHRIR, *rightInterpHRIR, *outLeft, *outRight;
+    fftwf_complex *inputSignal, *leftHRIR, *rightHRIR, *outLeft, *outRight;
     fftwf_plan inputFFT, leftHrirFFT, rightHrirFFT, leftInterpHrirFFT, rightInterpHrirFFT, outLeftIFFT, outRightIFFT;
 
     void addHrirsToArray();
