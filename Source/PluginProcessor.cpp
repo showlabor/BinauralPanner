@@ -11,7 +11,6 @@
 /*
 TODO
 
-combine hrtf to one
 smooth automation
 add second channel
 make sure clear all channel
@@ -264,8 +263,8 @@ void HrtfPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
     inputSignal = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex)*fftSize);
     leftHRIR = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex)*fftSize);
     rightHRIR = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex)*fftSize);
-    leftInterpHRIR = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex)*fftSize);
-    rightInterpHRIR = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex)*fftSize);
+ //   leftInterpHRIR = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex)*fftSize);
+ //   rightInterpHRIR = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex)*fftSize);
     outLeft = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex)*fftSize);
     outRight = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex)*fftSize);
 
@@ -277,8 +276,8 @@ void HrtfPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
      inputFFT = fftwf_plan_dft_1d(fftSize, inputSignal, inputSignal, FFTW_FORWARD, FFTW_ESTIMATE);
      leftHrirFFT = fftwf_plan_dft_1d(fftSize, leftHRIR, leftHRIR, FFTW_FORWARD, FFTW_ESTIMATE);
      rightHrirFFT = fftwf_plan_dft_1d(fftSize, rightHRIR, rightHRIR, FFTW_FORWARD, FFTW_ESTIMATE);
-     leftInterpHrirFFT = fftwf_plan_dft_1d(fftSize, leftInterpHRIR, leftInterpHRIR, FFTW_FORWARD, FFTW_ESTIMATE);
-     rightInterpHrirFFT = fftwf_plan_dft_1d(fftSize, rightInterpHRIR, rightInterpHRIR, FFTW_FORWARD, FFTW_ESTIMATE);
+ //    leftInterpHrirFFT = fftwf_plan_dft_1d(fftSize, leftInterpHRIR, leftInterpHRIR, FFTW_FORWARD, FFTW_ESTIMATE);
+//     rightInterpHrirFFT = fftwf_plan_dft_1d(fftSize, rightInterpHRIR, rightInterpHRIR, FFTW_FORWARD, FFTW_ESTIMATE);
      outLeftIFFT = fftwf_plan_dft_1d(fftSize, outLeft, outLeft, FFTW_BACKWARD, FFTW_ESTIMATE);
      outRightIFFT = fftwf_plan_dft_1d(fftSize, outRight, outRight, FFTW_BACKWARD, FFTW_ESTIMATE);
 
@@ -291,16 +290,16 @@ void HrtfPluginAudioProcessor::releaseResources()
     fftwf_destroy_plan(inputFFT);
     fftwf_destroy_plan(leftHrirFFT);
     fftwf_destroy_plan(rightHrirFFT);
-    fftwf_destroy_plan(leftInterpHrirFFT);
-    fftwf_destroy_plan(rightInterpHrirFFT);
+   // fftwf_destroy_plan(leftInterpHrirFFT);
+   // fftwf_destroy_plan(rightInterpHrirFFT);
     fftwf_destroy_plan(outLeftIFFT);
     fftwf_destroy_plan(outRightIFFT);
 
     fftwf_free(inputSignal);
     fftwf_free(leftHRIR);
     fftwf_free(rightHRIR);
-    fftwf_free(leftInterpHRIR);
-    fftwf_free(rightInterpHRIR);
+  //  fftwf_free(leftInterpHRIR);
+  //  fftwf_free(rightInterpHRIR);
     fftwf_free(outLeft);
     fftwf_free(outRight);
 }
@@ -342,18 +341,6 @@ void HrtfPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
   //  if(updateHrir){
    //   uiKnob->setValue(azimuth->get());
    // }
-   /* const int totalNumInputChannels  = getTotalNumInputChannels();
-    const int totalNumOutputChannels = getTotalNumOutputChannels();
-
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
-    for (int i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear (i, 0, buffer.getNumSamples());
-*/
 
     if(buffer.getRMSLevel(0,0,buffer.getNumSamples())>0){
         if(updateHrir){
@@ -378,20 +365,18 @@ void HrtfPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
         for(int inputIndex = 0; inputIndex <fftSize; inputIndex ++){
             if(updateHrir){
                 if(inputIndex<hrirLength){
-                    leftHRIR[inputIndex][0] = *(leftHrirArray->begin()+inputIndex);
-                    rightHRIR[inputIndex][0] = *(rightHrirArray->begin()+inputIndex);
-                    leftInterpHRIR[inputIndex][0] = *(leftInterpHrirArray->begin()+inputIndex);
-                    rightInterpHRIR[inputIndex][0] = *(rightInterpHrirArray->begin()+inputIndex);
+                    leftHRIR[inputIndex][0] = (*(leftHrirArray->begin()+inputIndex)*floorAmp)
+                    + (*(leftInterpHrirArray->begin()+inputIndex)*ceilAmp);
+                    rightHRIR[inputIndex][0] = (*(rightHrirArray->begin()+inputIndex)*floorAmp)
+                    + (*(rightInterpHrirArray->begin()+inputIndex)*ceilAmp);
                 }else{
                     leftHRIR[inputIndex][0] = 0;
                     rightHRIR[inputIndex][0] = 0;
-                    leftInterpHRIR[inputIndex][0] = 0;
-                    rightInterpHRIR[inputIndex][0] = 0;
+                  //  leftInterpHRIR[inputIndex][0] = 0;
+                   // rightInterpHRIR[inputIndex][0] = 0;
                 }
                 leftHRIR[inputIndex][1] = 0;
                 rightHRIR[inputIndex][1] = 0;
-                leftInterpHRIR[inputIndex][1] = 0;
-                rightInterpHRIR[inputIndex][1] = 0;
             }
 
             if(inputIndex<buffer.getNumSamples()){
@@ -405,24 +390,14 @@ void HrtfPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
         if(updateHrir){
             fftwf_execute(leftHrirFFT);
             fftwf_execute(rightHrirFFT);
-            fftwf_execute(leftInterpHrirFFT);
-            fftwf_execute(rightInterpHrirFFT);
         }
         fftwf_execute(inputFFT);
 
         for(int freqBin = 0; freqBin< fftSize; freqBin++){
-            outLeft[freqBin][0] =
-            ((inputSignal[freqBin][0]*leftHRIR[freqBin][0] - (inputSignal[freqBin][1]*leftHRIR[freqBin][1]))*floorAmp)+
-            ((inputSignal[freqBin][0]*leftInterpHRIR[freqBin][0] - (inputSignal[freqBin][1]*leftInterpHRIR[freqBin][1]))*ceilAmp);
-            outLeft[freqBin][1] =
-            ((inputSignal[freqBin][1]*leftHRIR[freqBin][0] + (inputSignal[freqBin][0]*leftHRIR[freqBin][1]))*floorAmp)+
-            ((inputSignal[freqBin][1]*leftInterpHRIR[freqBin][0] + (inputSignal[freqBin][0]*leftInterpHRIR[freqBin][1]))*ceilAmp);
-            outRight[freqBin][0] =
-            ((inputSignal[freqBin][0]*rightHRIR[freqBin][0] - (inputSignal[freqBin][1]*rightHRIR[freqBin][1]))*floorAmp)+
-            ((inputSignal[freqBin][0]*rightInterpHRIR[freqBin][0] - (inputSignal[freqBin][1]*rightInterpHRIR[freqBin][1]))*ceilAmp);
-            outRight[freqBin][1] =
-            ((inputSignal[freqBin][1]*rightHRIR[freqBin][0] + (inputSignal[freqBin][0]*rightHRIR[freqBin][1]))*floorAmp)+
-            ((inputSignal[freqBin][1]*rightInterpHRIR[freqBin][0] + (inputSignal[freqBin][0]*rightInterpHRIR[freqBin][1]))*ceilAmp);
+            outLeft[freqBin][0] = (inputSignal[freqBin][0]*leftHRIR[freqBin][0]) - (inputSignal[freqBin][1]*leftHRIR[freqBin][1]);
+            outLeft[freqBin][1] = (inputSignal[freqBin][1]*leftHRIR[freqBin][0]) + (inputSignal[freqBin][0]*leftHRIR[freqBin][1]);
+            outRight[freqBin][0] =(inputSignal[freqBin][0]*rightHRIR[freqBin][0])- (inputSignal[freqBin][1]*rightHRIR[freqBin][1]);
+            outRight[freqBin][1] = (inputSignal[freqBin][1]*rightHRIR[freqBin][0]) + (inputSignal[freqBin][0]*rightHRIR[freqBin][1]);
         }
         fftwf_execute(outLeftIFFT);
         fftwf_execute(outRightIFFT);
