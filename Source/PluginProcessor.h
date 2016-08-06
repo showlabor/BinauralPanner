@@ -57,10 +57,11 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     //===============================================================================
-    void setAzimuth(float);
-    int getHrirIndex();
+    void setAzimuth(int channel, float value);
+    float getAzimuth(int channel);
+    int getHrirIndex(int channel);
 
-    AudioParameterFloat* azimuth;
+    //AudioParameterFloat* azimuth;
     //Slider* uiKnob;
 
 
@@ -68,16 +69,33 @@ private:
     //==============================================================================
 
     const float PI = 3.14159265359;
-    int hrirLength, fftSize, flooredIndex;
-    float previousAzimuth, floorAmp, ceilAmp, previousFloorAmp, previousCeilAmp;
-    bool isFirstBuffer;
+    int hrirLength, fftSize;// flooredIndex;
+    //float previousAzimuth, floorAmp, ceilAmp, previousFloorAmp, previousCeilAmp;
+    //bool isFirstBuffer;
+
+    struct ChannelVariables{
+        bool isFirstBuffer;
+        int flooredIndex;
+        float previousAzimuth, floorAmp, ceilAmp, rms;
+        AudioParameterFloat* azimuth;
+    }leftChannelVariables, rightChannelVariables;
 
     Array<Array<float>> hrir;
     Array<float> rightPreviousOutput,leftPreviousOutput;
-    Array<float> *leftHrirArray,*rightHrirArray,*leftInterpHrirArray,*rightInterpHrirArray;
+    //Array<float> *leftHrirArray,*rightHrirArray,*leftInterpHrirArray,*rightInterpHrirArray;
 
-    fftwf_complex *inputSignal, *leftHRIR, *rightHRIR, *outLeft, *outRight;
-    fftwf_plan inputFFT, leftHrirFFT, rightHrirFFT, leftInterpHrirFFT, rightInterpHrirFFT, outLeftIFFT, outRightIFFT;
+    //fftwf_complex *inputSignal, *leftHRIR, *rightHRIR, *outLeft, *outRight;
+
+
+    struct ChannelFftData{
+        fftwf_complex *inputSignal, *leftHRIR, *rightHRIR;
+        fftwf_plan inputFFT, leftHrirFFT, rightHrirFFT;
+        Array<float> *leftHrirArray,*rightHrirArray,*leftInterpHrirArray,*rightInterpHrirArray;
+    }leftChannelFftData, rightChannelFftData;
+
+    fftwf_complex *outLeft, *outRight;
+    fftwf_plan outLeftIFFT, outRightIFFT;
+    //fftwf_plan inputFFT, leftHrirFFT, rightHrirFFT, outLeftIFFT, outRightIFFT;
 
     void addHrirsToArray();
 

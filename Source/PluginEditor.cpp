@@ -24,14 +24,14 @@ HrtfPluginAudioProcessorEditor::HrtfPluginAudioProcessorEditor (HrtfPluginAudioP
     leftKnob->setColour(Slider::rotarySliderOutlineColourId, Colours::black);
     leftKnob->setRange(-180,180,0);
     leftKnob->addListener(this);
-    leftKnob->setValue(processor.azimuth->get());
+    leftKnob->setValue(processor.getAzimuth(0));
     rightKnob->setSliderStyle(Slider::Rotary);
     rightKnob->setRotaryParameters(PI,PI*3,true);
     rightKnob->setColour(Slider::rotarySliderFillColourId, Colours::transparentBlack);
     rightKnob->setColour(Slider::rotarySliderOutlineColourId, Colours::black);
     rightKnob->setRange(-180,180,0);
-    //rightKnob->addListener(this);
-    //rightKnob->setValue(processor.azimuth->get());
+    rightKnob->addListener(this);
+    rightKnob->setValue(processor.getAzimuth(1));
     //processor.uileftKnob = leftKnob;
     setSize (450, 210);
 }
@@ -61,5 +61,9 @@ void HrtfPluginAudioProcessorEditor::resized()
 }
 
 void HrtfPluginAudioProcessorEditor::sliderValueChanged(Slider* slider){
-    processor.setAzimuth(slider->getValue());
+    if(slider == leftKnob){
+        processor.setAzimuth(0,slider->getValue());
+    }else if (slider == rightKnob){
+        processor.setAzimuth(1,slider->getValue());
+    }
 }
