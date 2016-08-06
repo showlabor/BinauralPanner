@@ -43,6 +43,8 @@ HrtfPluginAudioProcessor::HrtfPluginAudioProcessor()
     addParameter(azimuth);
 
     isFirstBuffer = true;
+    previousFloorAmp = 1;
+    previousCeilAmp = 0;
    // uiKnob = nullptr;
 
 }
@@ -365,10 +367,15 @@ void HrtfPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
         for(int inputIndex = 0; inputIndex <fftSize; inputIndex ++){
             if(updateHrir){
                 if(inputIndex<hrirLength){
-                    leftHRIR[inputIndex][0] = (*(leftHrirArray->begin()+inputIndex)*floorAmp)
-                    + (*(leftInterpHrirArray->begin()+inputIndex)*ceilAmp);
-                    rightHRIR[inputIndex][0] = (*(rightHrirArray->begin()+inputIndex)*floorAmp)
-                    + (*(rightInterpHrirArray->begin()+inputIndex)*ceilAmp);
+
+                    float tempFloorAmp = ((floorAmp-previousFloorAmp)/hrirLength*inputIndex)+previousFloorAmp;
+                    float tempCeilAmp = ((ceilAmp-previousCeilAmp)/hrirLength*inputIndex)+previousCeilAmp;
+
+                    leftHRIR[inputIndex][0] = (*(leftHrirArray->begin()+inputIndex)*tempFloorAmp)
+                    + (*(leftInterpHrirArray->begin()+inputIndex)*tempCeilAmp);
+                    rightHRIR[inputIndex][0] = (*(rightHrirArray->begin()+inputIndex)*tempFloorAmp)
+                    + (*(rightInterpHrirArray->begin()+inputIndex)*tempCeilAmp);
+
                 }else{
                     leftHRIR[inputIndex][0] = 0;
                     rightHRIR[inputIndex][0] = 0;
@@ -390,6 +397,8 @@ void HrtfPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
         if(updateHrir){
             fftwf_execute(leftHrirFFT);
             fftwf_execute(rightHrirFFT);
+            previousFloorAmp = floorAmp;
+            previousCeilAmp = ceilAmp;
         }
         fftwf_execute(inputFFT);
 

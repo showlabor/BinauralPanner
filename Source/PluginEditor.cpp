@@ -16,28 +16,37 @@
 HrtfPluginAudioProcessorEditor::HrtfPluginAudioProcessorEditor (HrtfPluginAudioProcessor& p)
     : AudioProcessorEditor (&p), processor (p)
 {
-    addAndMakeVisible (knob);
-    knob->setSliderStyle(Slider::Rotary);
-    knob->setRotaryParameters(PI,PI*3,true);
-    knob->setColour(Slider::rotarySliderFillColourId, Colours::transparentBlack);
-    knob->setColour(Slider::rotarySliderOutlineColourId, Colours::black);
-    knob->setRange(-180,180,0);
-    knob->addListener(this);
-    knob->setValue(processor.azimuth->get());
-    //processor.uiKnob = knob;
-    setSize (400, 300);
+    addAndMakeVisible (leftKnob);
+    addAndMakeVisible (rightKnob);
+    leftKnob->setSliderStyle(Slider::Rotary);
+    leftKnob->setRotaryParameters(PI,PI*3,true);
+    leftKnob->setColour(Slider::rotarySliderFillColourId, Colours::transparentBlack);
+    leftKnob->setColour(Slider::rotarySliderOutlineColourId, Colours::black);
+    leftKnob->setRange(-180,180,0);
+    leftKnob->addListener(this);
+    leftKnob->setValue(processor.azimuth->get());
+    rightKnob->setSliderStyle(Slider::Rotary);
+    rightKnob->setRotaryParameters(PI,PI*3,true);
+    rightKnob->setColour(Slider::rotarySliderFillColourId, Colours::transparentBlack);
+    rightKnob->setColour(Slider::rotarySliderOutlineColourId, Colours::black);
+    rightKnob->setRange(-180,180,0);
+    //rightKnob->addListener(this);
+    //rightKnob->setValue(processor.azimuth->get());
+    //processor.uileftKnob = leftKnob;
+    setSize (450, 210);
 }
 
 HrtfPluginAudioProcessorEditor::~HrtfPluginAudioProcessorEditor()
 {
-    delete knob;
+    delete leftKnob;
+    delete rightKnob;
 }
 
 //==============================================================================
 void HrtfPluginAudioProcessorEditor::paint (Graphics& g)
 {
     g.fillAll (Colours::silver);
-    //knob->setValue(processor.azimuth->get());
+    //leftKnob->setValue(processor.azimuth->get());
    // g.setColour (Colours::black);
    // g.setFont (15.0f);
    // g.drawFittedText ("Hello World!", getLocalBounds(), Justification::centred, 1);
@@ -47,8 +56,8 @@ void HrtfPluginAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
-    knob->setBounds(100,50,200,200);
-
+    leftKnob->setBounds(50,20,170,170);
+    rightKnob->setBounds(230,20,170,170);
 }
 
 void HrtfPluginAudioProcessorEditor::sliderValueChanged(Slider* slider){

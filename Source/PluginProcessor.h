@@ -69,7 +69,7 @@ private:
 
     const float PI = 3.14159265359;
     int hrirLength, fftSize, flooredIndex;
-    float previousAzimuth, floorAmp, ceilAmp;
+    float previousAzimuth, floorAmp, ceilAmp, previousFloorAmp, previousCeilAmp;
     bool isFirstBuffer;
 
     Array<Array<float>> hrir;
