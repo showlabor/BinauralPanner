@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Release" />
-	<File name="../../Source/PluginEditor.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="../../Source/PluginProcessor.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1047" topLine="14" />
+			<Cursor1 position="301686" topLine="386" />
+		</Cursor>
+		<Folding>
+			<Collapse line="62" />
+		</Folding>
+	</File>
+	<File name="../../Source/PluginEditor.cpp" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="996" topLine="16" />
 		</Cursor>
 	</File>
 	<File name="../../Source/PluginProcessor.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2875" topLine="54" />
+			<Cursor1 position="2363" topLine="47" />
 		</Cursor>
 	</File>
-	<File name="../../Source/PluginProcessor.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="../../Source/PluginEditor.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="289215" topLine="237" />
-		</Cursor>
-		<Folding>
-			<Collapse line="58" />
-		</Folding>
-	</File>
-	<File name="../../Source/PluginEditor.cpp" open="1" top="1" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2213" topLine="32" />
+			<Cursor1 position="1047" topLine="14" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

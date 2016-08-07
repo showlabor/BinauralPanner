@@ -42,11 +42,13 @@ HrtfPluginAudioProcessor::HrtfPluginAudioProcessor()
     leftChannelVariables.previousAzimuth = -180;
     addParameter(leftChannelVariables.azimuth);
     leftChannelVariables.isFirstBuffer = true;
+    leftChannelVariables.isMute = false;
 
     rightChannelVariables.azimuth = new AudioParameterFloat("Azimuth", "Azimuth",-180,180,0);
     rightChannelVariables.previousAzimuth = -180;
     addParameter(rightChannelVariables.azimuth);
     rightChannelVariables.isFirstBuffer = true;
+    rightChannelVariables.isMute = false;
     //previousFloorAmp = 1;
     //previousCeilAmp = 0;
    // uiKnob = nullptr;
@@ -57,6 +59,15 @@ HrtfPluginAudioProcessor::~HrtfPluginAudioProcessor()
 {
    // delete azimuth;
    // delete hrir;
+   hrir.clear();
+   leftChannelFftData.leftHrirArray = nullptr;
+   leftChannelFftData.rightHrirArray = nullptr;
+   leftChannelFftData.leftInterpHrirArray = nullptr;
+   leftChannelFftData.rightInterpHrirArray = nullptr;
+   rightChannelFftData.leftHrirArray = nullptr;
+   rightChannelFftData.rightHrirArray = nullptr;
+   rightChannelFftData.leftInterpHrirArray = nullptr;
+   rightChannelFftData.rightInterpHrirArray = nullptr;
 }
 
 //==============================================================================
@@ -383,7 +394,7 @@ void HrtfPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
    //   uiKnob->setValue(azimuth->get());
    // }
 
-    if(leftChannelVariables.rms>0){
+    if(leftChannelVariables.rms>0 && !leftChannelVariables.isMute){
         if(updateLeftHrir){
             leftChannelVariables.isFirstBuffer = false;
             leftChannelVariables.flooredIndex = getHrirIndex(0);
@@ -453,7 +464,7 @@ void HrtfPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
         leftChannelVariables.isFirstBuffer = true;
     }
 
-     if(rightChannelVariables.rms>0){
+     if(rightChannelVariables.rms>0 && !rightChannelVariables.isMute){
         if(updateRightHrir){
             rightChannelVariables.isFirstBuffer = false;
             rightChannelVariables.flooredIndex = getHrirIndex(1);
@@ -522,7 +533,7 @@ void HrtfPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
         rightChannelVariables.isFirstBuffer = true;
     }
 
-    if (leftChannelVariables.rms > 0 && rightChannelVariables.rms > 0){
+    if (leftChannelVariables.rms > 0 && rightChannelVariables.rms > 0 && !leftChannelVariables.isMute && !rightChannelVariables.isMute){
         for(int freqBin = 0; freqBin< fftSize; freqBin++){
             outLeft[freqBin][0] =
             (leftChannelFftData.inputSignal[freqBin][0]*leftChannelFftData.leftHRIR[freqBin][0])
@@ -548,7 +559,7 @@ void HrtfPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
         fftwf_execute(outLeftIFFT);
         fftwf_execute(outRightIFFT);
     }
-    else if(leftChannelVariables.rms > 0){
+    else if(leftChannelVariables.rms > 0 && !leftChannelVariables.isMute){
          for(int freqBin = 0; freqBin< fftSize; freqBin++){
             outLeft[freqBin][0] =
             (leftChannelFftData.inputSignal[freqBin][0]*leftChannelFftData.leftHRIR[freqBin][0])
@@ -565,7 +576,7 @@ void HrtfPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
         }
         fftwf_execute(outLeftIFFT);
         fftwf_execute(outRightIFFT);
-    } else if (rightChannelVariables.rms > 0){
+    } else if (rightChannelVariables.rms > 0 && !rightChannelVariables.isMute){
          for(int freqBin = 0; freqBin< fftSize; freqBin++){
             outLeft[freqBin][0] =
             (rightChannelFftData.inputSignal[freqBin][0]*rightChannelFftData.leftHRIR[freqBin][0])
@@ -680,6 +691,17 @@ int HrtfPluginAudioProcessor::getHrirIndex(int channel){
         break;
         case 1:
             return ((360-(int)rightChannelVariables.azimuth->get()+360)/15*2)%hrir.size();
+        break;
+    }
+}
+
+void HrtfPluginAudioProcessor::setMute(int channel, bool value){
+    switch(channel){
+        case 0:
+            leftChannelVariables.isMute = value;
+        break;
+        case 1:
+            rightChannelVariables.isMute = value;
         break;
     }
 }

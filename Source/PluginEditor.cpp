@@ -18,6 +18,8 @@ HrtfPluginAudioProcessorEditor::HrtfPluginAudioProcessorEditor (HrtfPluginAudioP
 {
     addAndMakeVisible (leftKnob);
     addAndMakeVisible (rightKnob);
+    addAndMakeVisible (leftToggle);
+    addAndMakeVisible (rightToggle);
     leftKnob->setSliderStyle(Slider::Rotary);
     leftKnob->setRotaryParameters(PI,PI*3,true);
     leftKnob->setColour(Slider::rotarySliderFillColourId, Colours::transparentBlack);
@@ -33,13 +35,30 @@ HrtfPluginAudioProcessorEditor::HrtfPluginAudioProcessorEditor (HrtfPluginAudioP
     rightKnob->addListener(this);
     rightKnob->setValue(processor.getAzimuth(1));
     //processor.uileftKnob = leftKnob;
+
+    leftToggle->addListener(this);
+    leftToggle->setButtonText("ON");
+    leftToggle->setColour(TextButton::buttonColourId, Colour(56,255,56));
+    leftToggle->setColour(TextButton::textColourOffId, Colours::black);
+    isLeftToggleOff = false;
+    rightToggle->addListener(this);
+    rightToggle->setButtonText("ON");
+    rightToggle->setColour(TextButton::buttonColourId, Colour(56,255,56));
+    rightToggle->setColour(TextButton::textColourOffId, Colours::black);
+    isRightToggleOff = false;
     setSize (450, 210);
+
+    startTimer(200);
 }
 
 HrtfPluginAudioProcessorEditor::~HrtfPluginAudioProcessorEditor()
 {
-    delete leftKnob;
-    delete rightKnob;
+    //delete leftKnob;
+    //delete rightKnob;
+    leftKnob = nullptr;
+    rightKnob = nullptr;
+    leftToggle = nullptr;
+    rightToggle = nullptr;
 }
 
 //==============================================================================
@@ -58,6 +77,10 @@ void HrtfPluginAudioProcessorEditor::resized()
     // subcomponents in your editor..
     leftKnob->setBounds(50,20,170,170);
     rightKnob->setBounds(230,20,170,170);
+    leftToggle->setBounds(50,15,30,30);
+    leftToggle->changeWidthToFitText();
+    rightToggle->setBounds(230,15,30,30);
+    rightToggle->changeWidthToFitText();
 }
 
 void HrtfPluginAudioProcessorEditor::sliderValueChanged(Slider* slider){
@@ -65,5 +88,49 @@ void HrtfPluginAudioProcessorEditor::sliderValueChanged(Slider* slider){
         processor.setAzimuth(0,slider->getValue());
     }else if (slider == rightKnob){
         processor.setAzimuth(1,slider->getValue());
+    }
+}
+
+void HrtfPluginAudioProcessorEditor::buttonClicked(Button* button){
+    if(button == (Button*)leftToggle){
+        if(isLeftToggleOff){
+            leftToggle->setButtonText("ON");
+            leftToggle->setColour(TextButton::buttonColourId, Colour(56,255,56));
+            leftToggle->setColour(TextButton::textColourOffId, Colours::black);
+            isLeftToggleOff = false;
+            processor.setMute(0,false);
+            DBG("setToOn");
+        }else{
+            leftToggle->setButtonText("OFF");
+            leftToggle->setColour(TextButton::buttonColourId, Colours::whitesmoke);
+            leftToggle->setColour(TextButton::textColourOffId, Colours::black);
+            isLeftToggleOff= true;
+            processor.setMute(0,true);
+            DBG("setTOOff");
+        }
+    }
+    if(button == (Button*) rightToggle){
+        if(isRightToggleOff){
+            rightToggle->setButtonText("ON");
+            rightToggle->setColour(TextButton::buttonColourId, Colour(56,255,56));
+            rightToggle->setColour(TextButton::textColourOffId, Colours::black);
+            isRightToggleOff = false;
+            processor.setMute(1,false);
+        }else{
+            rightToggle->setButtonText("OFF");
+            rightToggle->setColour(TextButton::buttonColourId, Colours::whitesmoke);
+            rightToggle->setColour(TextButton::textColourOffId, Colours::black);
+            processor.setMute(1,true);
+            isRightToggleOff = true;
+        }
+    }
+}
+
+void HrtfPluginAudioProcessorEditor::timerCallback(){
+    if(processor.getAzimuth(0) != (float)(leftKnob->getValue())){
+        leftKnob->setValue(processor.getAzimuth(0));
+    }
+    if(processor.getAzimuth(1) != (float)(rightKnob->getValue())){
+        rightKnob->setValue(processor.getAzimuth(1));
     }
 }
