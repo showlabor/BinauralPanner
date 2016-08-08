@@ -57,10 +57,12 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     //===============================================================================
-    void setAzimuth(float);
-    int getHrirIndex();
+    void setAzimuth(int channel, float value);
+    float getAzimuth(int channel);
+    void setMute(int channel, bool value);
+    int getHrirIndex(int channel);
 
-    AudioParameterFloat* azimuth;
+    //AudioParameterFloat* azimuth;
     //Slider* uiKnob;
 
 
@@ -68,20 +70,34 @@ private:
     //==============================================================================
 
     const float PI = 3.14159265359;
-    int hrirLength, fftSize, flooredIndex;
-    float previousAzimuth, floorAmp, ceilAmp;
-    bool isFirstBuffer;
+    int hrirLength, fftSize;// flooredIndex;
+    //float previousAzimuth, floorAmp, ceilAmp, previousFloorAmp, previousCeilAmp;
+    //bool isFirstBuffer;
 
-    Array<Array<float>> hrir;
-    Array<float> rightPreviousOutput,leftPreviousOutput;
-    Array<float> *leftHrirArray,*rightHrirArray,*leftInterpHrirArray,*rightInterpHrirArray;
+    struct ChannelVariables{
+        float rms,previousAzimuth, floorAmp, ceilAmp;
+        int flooredIndex;
+        AudioParameterFloat* azimuth;
+        bool isFirstBuffer, isMute;
+    }leftChannelVariables, rightChannelVariables;
 
-    fftwf_complex *inputSignal, *leftHRIR, *rightHRIR, *outLeft, *outRight;
-    fftwf_plan inputFFT, leftHrirFFT, rightHrirFFT, leftInterpHrirFFT, rightInterpHrirFFT, outLeftIFFT, outRightIFFT;
+    Array<Array<float>> hrir = Array <Array<float>>();;
+    Array<float> rightPreviousOutput = Array<float>();
+    Array<float> leftPreviousOutput = Array<float>();
+    //Array<float> *leftHrirArray,*rightHrirArray,*leftInterpHrirArray,*rightInterpHrirArray;
+
+    //fftwf_complex *inputSignal, *leftHRIR, *rightHRIR, *outLeft, *outRight;
+    struct ChannelFftData{
+        fftwf_plan inputFFT, leftHrirFFT, rightHrirFFT;
+        fftwf_complex *inputSignal, *leftHRIR, *rightHRIR;
+        Array<float> *leftHrirArray,*rightHrirArray,*leftInterpHrirArray,*rightInterpHrirArray;
+    }leftChannelFftData, rightChannelFftData;
+
+    fftwf_complex *outLeft, *outRight;
+    fftwf_plan outLeftIFFT, outRightIFFT;
+    //fftwf_plan inputFFT, leftHrirFFT, rightHrirFFT, outLeftIFFT, outRightIFFT;
 
     void addHrirsToArray();
-
-
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HrtfPluginAudioProcessor)
 };

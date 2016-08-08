@@ -23,8 +23,8 @@
           <Add option="-DDEBUG=1"/>
           <Add option="-D_DEBUG=1"/>
           <Add option="-DJUCER_CODEBLOCKS_LINUX_191E0897=1"/>
-          <Add option="-DJUCE_APP_VERSION=1.0.2"/>
-          <Add option="-DJUCE_APP_VERSION_HEX=0x10002"/>
+          <Add option="-DJUCE_APP_VERSION=1.0.5"/>
+          <Add option="-DJUCE_APP_VERSION_HEX=0x10005"/>
           <Add directory="."/>
           <Add directory="..\..\JuceLibraryCode"/>
           <Add directory="/usr/include/freetype2"/>
@@ -56,8 +56,8 @@
           <Add option="-DLINUX=1"/>
           <Add option="-DNDEBUG=1"/>
           <Add option="-DJUCER_CODEBLOCKS_LINUX_191E0897=1"/>
-          <Add option="-DJUCE_APP_VERSION=1.0.2"/>
-          <Add option="-DJUCE_APP_VERSION_HEX=0x10002"/>
+          <Add option="-DJUCE_APP_VERSION=1.0.5"/>
+          <Add option="-DJUCE_APP_VERSION_HEX=0x10005"/>
           <Add directory="."/>
           <Add directory="..\..\JuceLibraryCode"/>
           <Add directory="/usr/include/freetype2"/>
@@ -361,7 +361,7 @@
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>
-    <Unit filename="../../../../../../juce/modules/juce_audio_basics/juce_audio_basics.h">
+    <Unit filename="../../../../juce/modules/juce_audio_basics/juce_audio_basics.h">
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>
@@ -529,7 +529,7 @@
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>
-    <Unit filename="../../../../../../juce/modules/juce_audio_devices/juce_audio_devices.h">
+    <Unit filename="../../../../juce/modules/juce_audio_devices/juce_audio_devices.h">
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>
@@ -1169,7 +1169,7 @@
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>
-    <Unit filename="../../../../../../juce/modules/juce_audio_formats/juce_audio_formats.h">
+    <Unit filename="../../../../juce/modules/juce_audio_formats/juce_audio_formats.h">
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>
@@ -1581,7 +1581,7 @@
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>
-    <Unit filename="../../../../../../juce/modules/juce_audio_plugin_client/juce_audio_plugin_client.h">
+    <Unit filename="../../../../juce/modules/juce_audio_plugin_client/juce_audio_plugin_client.h">
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>
@@ -1777,7 +1777,7 @@
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>
-    <Unit filename="../../../../../../juce/modules/juce_audio_processors/juce_audio_processors.h">
+    <Unit filename="../../../../juce/modules/juce_audio_processors/juce_audio_processors.h">
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>
@@ -2685,7 +2685,7 @@
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>
-    <Unit filename="../../../../../../juce/modules/juce_core/juce_core.h">
+    <Unit filename="../../../../juce/modules/juce_core/juce_core.h">
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>
@@ -2749,7 +2749,7 @@
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>
-    <Unit filename="../../../../../../juce/modules/juce_cryptography/juce_cryptography.h">
+    <Unit filename="../../../../juce/modules/juce_cryptography/juce_cryptography.h">
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>
@@ -2825,7 +2825,7 @@
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>
-    <Unit filename="../../../../../../juce/modules/juce_data_structures/juce_data_structures.h">
+    <Unit filename="../../../../juce/modules/juce_data_structures/juce_data_structures.h">
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>
@@ -2997,7 +2997,7 @@
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>
-    <Unit filename="../../../../../../juce/modules/juce_events/juce_events.h">
+    <Unit filename="../../../../juce/modules/juce_events/juce_events.h">
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>
@@ -3637,7 +3637,7 @@
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>
-    <Unit filename="../../../../../../juce/modules/juce_graphics/juce_graphics.h">
+    <Unit filename="../../../../juce/modules/juce_graphics/juce_graphics.h">
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>
@@ -4661,7 +4661,7 @@
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>
-    <Unit filename="../../../../../../juce/modules/juce_gui_basics/juce_gui_basics.h">
+    <Unit filename="../../../../juce/modules/juce_gui_basics/juce_gui_basics.h">
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>
@@ -4873,7 +4873,7 @@
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>
-    <Unit filename="../../../../../../juce/modules/juce_gui_extra/juce_gui_extra.h">
+    <Unit filename="../../../../juce/modules/juce_gui_extra/juce_gui_extra.h">
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>
@@ -5009,7 +5009,7 @@
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>
-    <Unit filename="../../../../../../juce/modules/juce_opengl/juce_opengl.h">
+    <Unit filename="../../../../juce/modules/juce_opengl/juce_opengl.h">
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>
@@ -5065,7 +5065,7 @@
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>
-    <Unit filename="../../../../../../juce/modules/juce_video/juce_video.h">
+    <Unit filename="../../../../juce/modules/juce_video/juce_video.h">
       <Option compile="0"/>
       <Option link="0"/>
     </Unit>

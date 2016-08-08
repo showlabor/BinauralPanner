@@ -18,7 +18,10 @@
 //==============================================================================
 /**
 */
-class HrtfPluginAudioProcessorEditor  : public AudioProcessorEditor, public Slider::Listener
+class HrtfPluginAudioProcessorEditor  : public AudioProcessorEditor,
+                                        public Slider::Listener,
+                                        public TextButton::Listener,
+                                        public Timer
 {
 public:
     HrtfPluginAudioProcessorEditor (HrtfPluginAudioProcessor&);
@@ -27,12 +30,24 @@ public:
     //==============================================================================
     void paint (Graphics&) override;
     void resized() override;
+    void sliderValueChanged(Slider* slider) override;
+    void timerCallback() override;
+    void buttonClicked(Button* button) override;
 
 private:
 
     const float PI = 3.14159265359;
-    Slider* knob = new Slider();
-    void sliderValueChanged(Slider* slider) override;
+    ScopedPointer<Slider> leftKnob = new Slider();
+    ScopedPointer<Slider> rightKnob = new Slider();
+    ScopedPointer<TextButton> leftToggle= new TextButton();
+    ScopedPointer<TextButton> rightToggle= new TextButton();
+    bool isLeftToggleOff, isRightToggleOff;
+
+    //TextButton* leftToggle= new TextButton();
+    //TextButton* rightToggle= new TextButton();
+    //Slider* leftKnob = new Slider();
+    //Slider* rightKnob = new Slider();
+
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     //float PI = 3.14159265359;
