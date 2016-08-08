@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>SchemeUserState</key>
+	<dict>
+		<key>BinauralPanner (AU).xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>3</integer>
+		</dict>
+		<key>BinauralPanner (All).xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>0</integer>
+		</dict>
+		<key>BinauralPanner (Shared Code).xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>4</integer>
+		</dict>
+		<key>BinauralPanner (VST).xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+		<key>BinauralPanner (VST3).xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>9E0DC2DC97FF5170D10D0E5A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>9EF5056A8F84051DCDF25EFE</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>A8659AD9579E88496808BAC0</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>BE4AC79115ACE34E6BAC11A5</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C2A8A65FE2A5D26943024890</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+	</dict>
+</dict>
+</plist>
