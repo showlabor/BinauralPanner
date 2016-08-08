@@ -23,8 +23,8 @@
           <Add option="-DDEBUG=1"/>
           <Add option="-D_DEBUG=1"/>
           <Add option="-DJUCER_CODEBLOCKS_LINUX_191E0897=1"/>
-          <Add option="-DJUCE_APP_VERSION=1.0.2"/>
-          <Add option="-DJUCE_APP_VERSION_HEX=0x10002"/>
+          <Add option="-DJUCE_APP_VERSION=1.0.5"/>
+          <Add option="-DJUCE_APP_VERSION_HEX=0x10005"/>
           <Add directory="."/>
           <Add directory="..\..\JuceLibraryCode"/>
           <Add directory="/usr/include/freetype2"/>
@@ -56,8 +56,8 @@
           <Add option="-DLINUX=1"/>
           <Add option="-DNDEBUG=1"/>
           <Add option="-DJUCER_CODEBLOCKS_LINUX_191E0897=1"/>
-          <Add option="-DJUCE_APP_VERSION=1.0.2"/>
-          <Add option="-DJUCE_APP_VERSION_HEX=0x10002"/>
+          <Add option="-DJUCE_APP_VERSION=1.0.5"/>
+          <Add option="-DJUCE_APP_VERSION_HEX=0x10005"/>
           <Add directory="."/>
           <Add directory="..\..\JuceLibraryCode"/>
           <Add directory="/usr/include/freetype2"/>

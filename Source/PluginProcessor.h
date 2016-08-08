@@ -75,22 +75,21 @@ private:
     //bool isFirstBuffer;
 
     struct ChannelVariables{
-        bool isFirstBuffer, isMute;
+        float rms,previousAzimuth, floorAmp, ceilAmp;
         int flooredIndex;
-        float previousAzimuth, floorAmp, ceilAmp, rms;
         AudioParameterFloat* azimuth;
+        bool isFirstBuffer, isMute;
     }leftChannelVariables, rightChannelVariables;
 
-    Array<Array<float>> hrir;
-    Array<float> rightPreviousOutput,leftPreviousOutput;
+    Array<Array<float>> hrir = Array <Array<float>>();;
+    Array<float> rightPreviousOutput = Array<float>();
+    Array<float> leftPreviousOutput = Array<float>();
     //Array<float> *leftHrirArray,*rightHrirArray,*leftInterpHrirArray,*rightInterpHrirArray;
 
     //fftwf_complex *inputSignal, *leftHRIR, *rightHRIR, *outLeft, *outRight;
-
-
     struct ChannelFftData{
-        fftwf_complex *inputSignal, *leftHRIR, *rightHRIR;
         fftwf_plan inputFFT, leftHrirFFT, rightHrirFFT;
+        fftwf_complex *inputSignal, *leftHRIR, *rightHRIR;
         Array<float> *leftHrirArray,*rightHrirArray,*leftInterpHrirArray,*rightInterpHrirArray;
     }leftChannelFftData, rightChannelFftData;
 
@@ -99,8 +98,6 @@ private:
     //fftwf_plan inputFFT, leftHrirFFT, rightHrirFFT, outLeftIFFT, outRightIFFT;
 
     void addHrirsToArray();
-
-
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HrtfPluginAudioProcessor)
 };

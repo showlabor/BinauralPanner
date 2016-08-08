@@ -29,9 +29,9 @@ HrtfPluginAudioProcessor::HrtfPluginAudioProcessor()
    // busArrangement.inputBuses.add(AudioProcessorBus("Input",AudioChannelSet::mono()));
    // busArrangement.outputBuses.add(AudioProcessorBus("Output",AudioChannelSet::stereo()));
 
-    leftPreviousOutput = Array<float>();
-    rightPreviousOutput = Array<float>();
-    hrir = Array <Array<float>> ();
+    //leftPreviousOutput = Array<float>();
+    //rightPreviousOutput = Array<float>();
+    //hrir = Array <Array<float>> ();
 
     addHrirsToArray();
 
@@ -372,38 +372,28 @@ bool HrtfPluginAudioProcessor::setPreferredBusArrangement (bool isInput, int bus
 
 void HrtfPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
-    const float* leftChannelDataRead = buffer.getReadPointer(0);
-    const float* rightChannelDataRead = buffer.getReadPointer(1);
-    int samplesInpreviousOutput = leftPreviousOutput.size();
-
-    bool updateLeftHrir = (leftChannelVariables.azimuth->get()==leftChannelVariables.previousAzimuth)
-    &&(!leftChannelVariables.isFirstBuffer)?false:true;
-    bool updateRightHrir = (rightChannelVariables.azimuth->get()==rightChannelVariables.previousAzimuth)
-    &&(!rightChannelVariables.isFirstBuffer)?false:true;
-
-    leftChannelVariables.previousAzimuth = leftChannelVariables.azimuth->get();
-    rightChannelVariables.previousAzimuth = rightChannelVariables.azimuth->get();
-
     leftChannelVariables.rms = buffer.getRMSLevel(0,0,buffer.getNumSamples());
     rightChannelVariables.rms = buffer.getRMSLevel(1,0,buffer.getNumSamples());
-
-    float* leftChannelDataWrite = buffer.getWritePointer(0);
-    float* rightChannelDataWrite = buffer.getWritePointer(1);
 
   //  if(updateHrir){
    //   uiKnob->setValue(azimuth->get());
    // }
 
     if(leftChannelVariables.rms>0 && !leftChannelVariables.isMute){
+
+        bool updateLeftHrir = (leftChannelVariables.azimuth->get()==leftChannelVariables.previousAzimuth)
+        &&(!leftChannelVariables.isFirstBuffer)?false:true;
+        leftChannelVariables.previousAzimuth = leftChannelVariables.azimuth->get();
+
         if(updateLeftHrir){
             leftChannelVariables.isFirstBuffer = false;
             leftChannelVariables.flooredIndex = getHrirIndex(0);
             //DBG("Loading Hrir "+flooredIndex);
             float rawParam = leftChannelVariables.azimuth->get()+360;
             if(std::floor(rawParam)!=rawParam){
-                leftChannelVariables.floorAmp = rawParam-std::floor(rawParam);
-                leftChannelVariables.ceilAmp = std::sqrt(1-leftChannelVariables.floorAmp);
-                leftChannelVariables.floorAmp = std::sqrt(leftChannelVariables.floorAmp);
+                //leftChannelVariables.floorAmp =
+                leftChannelVariables.ceilAmp = std::sqrt(1-rawParam+std::floor(rawParam));
+                leftChannelVariables.floorAmp = std::sqrt(rawParam-std::floor(rawParam));
             }else{
                 leftChannelVariables.floorAmp = 1;
                 leftChannelVariables.ceilAmp = 0;
@@ -413,6 +403,8 @@ void HrtfPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
             leftChannelFftData.leftInterpHrirArray = hrir.begin()+((leftChannelVariables.flooredIndex+2)%hrir.size());
             leftChannelFftData.rightInterpHrirArray = hrir.begin()+((leftChannelVariables.flooredIndex+3)%hrir.size());
         }
+
+        const float* leftChannelDataRead = buffer.getReadPointer(0);
 
         for(int inputIndex = 0; inputIndex <fftSize; inputIndex ++){
             if(updateLeftHrir){
@@ -465,15 +457,20 @@ void HrtfPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
     }
 
      if(rightChannelVariables.rms>0 && !rightChannelVariables.isMute){
+
+        bool updateRightHrir = (rightChannelVariables.azimuth->get()==rightChannelVariables.previousAzimuth)
+        &&(!rightChannelVariables.isFirstBuffer)?false:true;
+        rightChannelVariables.previousAzimuth = rightChannelVariables.azimuth->get();
+
         if(updateRightHrir){
             rightChannelVariables.isFirstBuffer = false;
             rightChannelVariables.flooredIndex = getHrirIndex(1);
             //DBG("Loading Hrir "+flooredIndex);
             float rawParam = rightChannelVariables.azimuth->get()+360;
             if(std::floor(rawParam)!=rawParam){
-                rightChannelVariables.floorAmp = rawParam-std::floor(rawParam);
-                rightChannelVariables.ceilAmp = std::sqrt(1-rightChannelVariables.floorAmp);
-                rightChannelVariables.floorAmp = std::sqrt(rightChannelVariables.floorAmp);
+               // rightChannelVariables.floorAmp = rawParam-std::floor(rawParam);
+                rightChannelVariables.ceilAmp = std::sqrt(1-rawParam+std::floor(rawParam));
+                rightChannelVariables.floorAmp = std::sqrt(rawParam-std::floor(rawParam));
             }else{
                 rightChannelVariables.floorAmp = 1;
                 rightChannelVariables.ceilAmp = 0;
@@ -483,6 +480,9 @@ void HrtfPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
             rightChannelFftData.leftInterpHrirArray = hrir.begin()+((rightChannelVariables.flooredIndex+2)%hrir.size());
             rightChannelFftData.rightInterpHrirArray = hrir.begin()+((rightChannelVariables.flooredIndex+3)%hrir.size());
         }
+
+
+        const float* rightChannelDataRead = buffer.getReadPointer(1);
 
         for(int inputIndex = 0; inputIndex <fftSize; inputIndex ++){
             if(updateRightHrir){
@@ -594,6 +594,10 @@ void HrtfPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
         fftwf_execute(outLeftIFFT);
         fftwf_execute(outRightIFFT);
     }
+
+    float* leftChannelDataWrite = buffer.getWritePointer(0);
+    float* rightChannelDataWrite = buffer.getWritePointer(1);
+    int samplesInpreviousOutput = leftPreviousOutput.size();
 
     for(int sample = 0; sample < fftSize;sample++){
 
