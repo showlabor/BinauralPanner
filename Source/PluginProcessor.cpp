@@ -372,14 +372,14 @@ bool HrtfPluginAudioProcessor::setPreferredBusArrangement (bool isInput, int bus
 
 void HrtfPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
-    leftChannelVariables.rms = buffer.getRMSLevel(0,0,buffer.getNumSamples());
-    rightChannelVariables.rms = buffer.getRMSLevel(1,0,buffer.getNumSamples());
+    leftChannelVariables.inputRms = buffer.getRMSLevel(0,0,buffer.getNumSamples());
+    rightChannelVariables.inputRms = buffer.getRMSLevel(1,0,buffer.getNumSamples());
 
   //  if(updateHrir){
    //   uiKnob->setValue(azimuth->get());
    // }
 
-    if(leftChannelVariables.rms>0 && !leftChannelVariables.isMute){
+    if(leftChannelVariables.inputRms>0 && !leftChannelVariables.isMute){
 
         bool updateLeftHrir = (leftChannelVariables.azimuth->get()==leftChannelVariables.previousAzimuth)
         &&(!leftChannelVariables.isFirstBuffer)?false:true;
@@ -456,7 +456,7 @@ void HrtfPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
         leftChannelVariables.isFirstBuffer = true;
     }
 
-     if(rightChannelVariables.rms>0 && !rightChannelVariables.isMute){
+     if(rightChannelVariables.inputRms>0 && !rightChannelVariables.isMute){
 
         bool updateRightHrir = (rightChannelVariables.azimuth->get()==rightChannelVariables.previousAzimuth)
         &&(!rightChannelVariables.isFirstBuffer)?false:true;
@@ -533,7 +533,7 @@ void HrtfPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
         rightChannelVariables.isFirstBuffer = true;
     }
 
-    if (leftChannelVariables.rms > 0 && rightChannelVariables.rms > 0 && !leftChannelVariables.isMute && !rightChannelVariables.isMute){
+    if (leftChannelVariables.inputRms > 0 && rightChannelVariables.inputRms > 0 && !leftChannelVariables.isMute && !rightChannelVariables.isMute){
         for(int freqBin = 0; freqBin< fftSize; freqBin++){
             outLeft[freqBin][0] =
             (leftChannelFftData.inputSignal[freqBin][0]*leftChannelFftData.leftHRIR[freqBin][0])
@@ -559,7 +559,7 @@ void HrtfPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
         fftwf_execute(outLeftIFFT);
         fftwf_execute(outRightIFFT);
     }
-    else if(leftChannelVariables.rms > 0 && !leftChannelVariables.isMute){
+    else if(leftChannelVariables.inputRms > 0 && !leftChannelVariables.isMute){
          for(int freqBin = 0; freqBin< fftSize; freqBin++){
             outLeft[freqBin][0] =
             (leftChannelFftData.inputSignal[freqBin][0]*leftChannelFftData.leftHRIR[freqBin][0])
@@ -576,7 +576,7 @@ void HrtfPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
         }
         fftwf_execute(outLeftIFFT);
         fftwf_execute(outRightIFFT);
-    } else if (rightChannelVariables.rms > 0 && !rightChannelVariables.isMute){
+    } else if (rightChannelVariables.inputRms > 0 && !rightChannelVariables.isMute){
          for(int freqBin = 0; freqBin< fftSize; freqBin++){
             outLeft[freqBin][0] =
             (rightChannelFftData.inputSignal[freqBin][0]*rightChannelFftData.leftHRIR[freqBin][0])
@@ -628,6 +628,9 @@ void HrtfPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
         leftPreviousOutput.removeRange(0,buffer.getNumSamples());
         rightPreviousOutput.removeRange(0,buffer.getNumSamples());
     }
+
+    leftChannelVariables.outputRms = buffer.getRMSLevel(0,0,buffer.getNumSamples());
+    rightChannelVariables.outputRms = buffer.getRMSLevel(1,0,buffer.getNumSamples());
 
 }
 
@@ -706,6 +709,16 @@ void HrtfPluginAudioProcessor::setMute(int channel, bool value){
         break;
         case 1:
             rightChannelVariables.isMute = value;
+        break;
+    }
+}
+
+float HrtfPluginAudioProcessor::getRms(int channel){
+    switch(channel){
+        case 0:
+            return leftChannelVariables.outputRms;
+        case 1:
+            return rightChannelVariables.outputRms;
         break;
     }
 }

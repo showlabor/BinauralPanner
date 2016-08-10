@@ -61,6 +61,7 @@ public:
     float getAzimuth(int channel);
     void setMute(int channel, bool value);
     int getHrirIndex(int channel);
+    float getRms(int channel);
 
     //AudioParameterFloat* azimuth;
     //Slider* uiKnob;
@@ -75,7 +76,9 @@ private:
     //bool isFirstBuffer;
 
     struct ChannelVariables{
-        float rms,previousAzimuth, floorAmp, ceilAmp;
+        float inputRms = 0;
+        float outputRms = 0;
+        float previousAzimuth, floorAmp, ceilAmp;
         int flooredIndex;
         AudioParameterFloat* azimuth;
         bool isFirstBuffer, isMute;
