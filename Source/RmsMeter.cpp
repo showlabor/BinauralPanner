@@ -44,7 +44,7 @@ void RmsMeter::paint (Graphics& g)
     g.fillAll (meterSetting.meterBackground);   // clear the background
     g.setColour (meterSetting.meterBarColour);
     //g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
-    int thickness = meterSetting.sizeY/meterSetting.numOfChannel;
+    //int thickness = meterSetting.sizeY/meterSetting.numOfChannel;
     int height = (int)(meterSetting.sizeY*0.5);
     for(int ch = 0; ch < meterSetting.numOfChannel; ++ch){
         g.fillRect(0,height*ch,rmsValues[ch],height);
