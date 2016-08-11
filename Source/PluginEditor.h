@@ -13,6 +13,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
+#include "RmsMeter.h"
 
 
 //==============================================================================
@@ -41,6 +42,8 @@ private:
     ScopedPointer<Slider> rightKnob = new Slider();
     ScopedPointer<TextButton> leftToggle= new TextButton();
     ScopedPointer<TextButton> rightToggle= new TextButton();
+    ScopedPointer<RmsMeter> meter = new RmsMeter(350,30,2);
+    Label* title = new Label();
     bool isLeftToggleOff, isRightToggleOff;
 
     //TextButton* leftToggle= new TextButton();

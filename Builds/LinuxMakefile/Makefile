@@ -49,6 +49,7 @@ ifeq ($(CONFIG),Release)
 endif
 
 OBJECTS := \
+  $(OBJDIR)/RmsMeter_5783aada.o \
   $(OBJDIR)/PluginProcessor_a059e380.o \
   $(OBJDIR)/PluginEditor_94d4fb09.o \
   $(OBJDIR)/juce_audio_basics_6b797ca1.o \
@@ -83,6 +84,11 @@ clean:
 strip:
 	@echo Stripping BinauralPanner
 	-@strip --strip-unneeded $(OUTDIR)/$(TARGET)
+
+$(OBJDIR)/RmsMeter_5783aada.o: ../../Source/RmsMeter.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling RmsMeter.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/PluginProcessor_a059e380.o: ../../Source/PluginProcessor.cpp
 	-@mkdir -p $(OBJDIR)

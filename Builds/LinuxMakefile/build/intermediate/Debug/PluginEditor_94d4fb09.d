@@ -456,4 +456,4 @@ build/intermediate/Debug/PluginEditor_94d4fb09.o: \
  ../../../../../../juce/modules/juce_video/playback/juce_DirectShowComponent.h \
  ../../../../../../juce/modules/juce_video/playback/juce_QuickTimeMovieComponent.h \
  ../../../../../../juce/modules/juce_video/capture/juce_CameraDevice.h \
- ../../Source/PluginEditor.h
+ ../../Source/PluginEditor.h ../../Source/RmsMeter.h
