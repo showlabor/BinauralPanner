@@ -43,6 +43,7 @@ private:
     ScopedPointer<TextButton> leftToggle= new TextButton();
     ScopedPointer<TextButton> rightToggle= new TextButton();
     ScopedPointer<RmsMeter> meter = new RmsMeter(350,30,2);
+    Label* title = new Label();
     bool isLeftToggleOff, isRightToggleOff;
 
     //TextButton* leftToggle= new TextButton();

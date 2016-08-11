@@ -3,7 +3,7 @@
 
     RmsMeter.h
     Created: 9 Aug 2016 8:23:26pm
-    Author:  wilsonubuntustudio
+    Author:  Wing Sang Wong
 
   ==============================================================================
 */
@@ -27,6 +27,8 @@ public:
     void resized() override;
     void setValue(int channel, float rms);
     void setSize(int x, int y);
+    int getX();
+    int getY();
     void setZeroDbPosition(int positionInPixel);
     void setNumOfChannel(int value);
     void setMeterBackgroundColour(Colour bg);
@@ -36,9 +38,9 @@ private:
     std::vector<int> rmsValues = std::vector<int>();
     struct{
     float minimumRms = 0.0001;
-    int sizeX = 300;
+    int sizeX = 350;
     int sizeY = 30;
-    int zeroDbPosition = 300;
+    int zeroDbPosition = 350;
     int numOfChannel = 2;
     Colour meterBarColour = Colours::cyan;
     Colour meterBackground = Colour(43,43,43);

@@ -3,7 +3,7 @@
 
     RmsMeter.cpp
     Created: 9 Aug 2016 8:23:26pm
-    Author:  wilsonubuntustudio
+    Author:  Wing Sang Wong
 
   ==============================================================================
 */
@@ -45,9 +45,11 @@ void RmsMeter::paint (Graphics& g)
     g.setColour (meterSetting.meterBarColour);
     //g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
     int thickness = meterSetting.sizeY/meterSetting.numOfChannel;
+    int height = (int)(meterSetting.sizeY*0.5);
     for(int ch = 0; ch < meterSetting.numOfChannel; ++ch){
-        int yPos = ch == 0? (int)(thickness/2) :(int)((meterSetting.sizeY/(ch+1))+(thickness/2));
-        g.drawLine(0,yPos,rmsValues[ch],yPos,thickness);
+        g.fillRect(0,height*ch,rmsValues[ch],height);
+        //int yPos = ch == 0? (int)(thickness/2) :(int)((meterSetting.sizeY/(ch+1))+(thickness/2));
+        //g.drawLine(0,yPos,rmsValues[ch],yPos,thickness);
     }
     //g.setColour (Colours::lightblue);
     //g.setFont (14.0f);
@@ -85,4 +87,12 @@ void RmsMeter::setNumOfChannel(int ch){
 
 void RmsMeter::setZeroDbPosition(int pos){
     meterSetting.zeroDbPosition = pos;
+}
+
+int RmsMeter::getX(){
+    return meterSetting.sizeX;
+}
+
+int RmsMeter::getY(){
+    return meterSetting.sizeY;
 }

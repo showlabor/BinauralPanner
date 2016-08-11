@@ -21,6 +21,7 @@ HrtfPluginAudioProcessorEditor::HrtfPluginAudioProcessorEditor (HrtfPluginAudioP
     addAndMakeVisible (leftToggle);
     addAndMakeVisible (rightToggle);
     addAndMakeVisible (meter);
+    addAndMakeVisible (title);
 
     leftKnob->setSliderStyle(Slider::Rotary);
     leftKnob->setRotaryParameters(PI,PI*3,true);
@@ -58,9 +59,15 @@ HrtfPluginAudioProcessorEditor::HrtfPluginAudioProcessorEditor (HrtfPluginAudioP
     rightToggle->setColour(TextButton::buttonColourId, Colours::cyan);
     rightToggle->setColour(TextButton::textColourOffId, Colours::black);
     isRightToggleOff = false;
-    setSize (450, 205);
 
-    startTimer(125);
+
+    title->setText( String("Stereo Binaural Panner"),NotificationType::dontSendNotification);
+    title->setColour(Label::backgroundColourId, Colour(43,43,43));
+    title->setColour(Label::textColourId, Colours::cyan);
+    //title->setFont(Font("Arial",10,1));
+
+    setSize (450, 205);
+    startTimer(135);
 }
 
 HrtfPluginAudioProcessorEditor::~HrtfPluginAudioProcessorEditor()
@@ -94,7 +101,8 @@ void HrtfPluginAudioProcessorEditor::resized()
     leftToggle->changeWidthToFitText();
     rightToggle->setBounds(230,15,30,30);
     rightToggle->changeWidthToFitText();
-    meter->setBounds(50, 165, 350, 30);
+    meter->setBounds(50, 165, meter->getX(),meter->getY());
+    title->setBounds(300,2,150,30);
 }
 
 void HrtfPluginAudioProcessorEditor::sliderValueChanged(Slider* slider){
