@@ -30,14 +30,12 @@
       transform-style: preserve-3d;
       background-color: grey;
     }
-    .gwd-img-1wg6 {
-      position: relative;
-      top: 10%;
-<<<<<<< HEAD
-	left: 50%;
-=======
-      left: 50%;
->>>>>>> 483780e2adc77d054529d17c2c9db6861b659b94
+
+.gwd-img-1wg6 {
+      display: block;
+	margin-top: 10px;
+       margin-left: auto;
+    	margin-right: auto;
     }
     .gwd-p-1xqo {
       position: relative;
