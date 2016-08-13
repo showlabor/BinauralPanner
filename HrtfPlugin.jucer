@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="TEt90m" name="BinauralPanner" projectType="audioplug" version="1.0.5"
+<JUCERPROJECT id="TEt90m" name="BinauralPanner" projectType="audioplug" version="1.0.8"
               bundleIdentifier="com.wingsplugins.binauralpanner" includeBinaryInAppConfig="1"
               buildVST="1" buildVST3="1" buildAU="1" buildAUv3="0" buildRTAS="0"
               buildAAX="0" pluginName="BinauralPanner" pluginDesc="BinauralPanner"
@@ -70,7 +70,8 @@
         <MODULEPATH id="juce_audio_plugin_client" path="../../../../juce/modules"/>
       </MODULEPATHS>
     </CODEBLOCKS_LINUX>
-    <XCODE_MAC targetFolder="Builds/MacOSX" vstFolder="" extraLinkerFlags="-lfftw3f -lm">
+    <XCODE_MAC targetFolder="Builds/MacOSX" vstFolder="" extraLinkerFlags="-lfftw3f -lm"
+               vst3Folder="">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="BinauralPanner"
                        headerPath="/usr/local/include" libraryPath="/usr/local/lib"
