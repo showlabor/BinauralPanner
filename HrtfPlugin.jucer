@@ -75,10 +75,12 @@
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="BinauralPanner"
                        headerPath="/usr/local/include" libraryPath="/usr/local/lib"
-                       osxArchitecture="64BitUniversal" osxCompatibility="10.10 SDK"/>
+                       osxArchitecture="64BitUniversal" osxCompatibility="10.10 SDK"
+                       osxSDK="default" cppLanguageStandard=""/>
         <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="BinauralPanner"
                        headerPath="/usr/local/include" libraryPath="/usr/local/lib"
-                       osxArchitecture="64BitUniversal" osxCompatibility="10.10 SDK"/>
+                       osxArchitecture="64BitUniversal" osxCompatibility="10.10 SDK"
+                       osxSDK="default" cppLanguageStandard="" linkTimeOptimisation="1"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_video" path="../../juce/modules"/>
