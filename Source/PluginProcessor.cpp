@@ -33,10 +33,11 @@ HrtfPluginAudioProcessor::HrtfPluginAudioProcessor()
     //rightPreviousOutput = Array<float>();
     //hrir = Array <Array<float>> ();
 
-    addHrirsToArray();
+    //addHrirsToArray();
 
-    Array<float>* temp = hrir.begin();
-    hrirLength = temp->size();
+    //Array<float>* temp = hrir.begin();
+    //hrirLength = temp->size();
+    hrirLength = hrir[1].size();
 
     leftChannelVariables.azimuth = new AudioParameterFloat("Azimuth", "Azimuth",-180,180,0);
     leftChannelVariables.previousAzimuth = -180;
@@ -59,7 +60,8 @@ HrtfPluginAudioProcessor::~HrtfPluginAudioProcessor()
 {
    // delete azimuth;
    // delete hrir;
-   hrir.clear();
+   //hrir.clear();
+   /*
    leftChannelFftData.leftHrirArray = nullptr;
    leftChannelFftData.rightHrirArray = nullptr;
    leftChannelFftData.leftInterpHrirArray = nullptr;
@@ -68,8 +70,10 @@ HrtfPluginAudioProcessor::~HrtfPluginAudioProcessor()
    rightChannelFftData.rightHrirArray = nullptr;
    rightChannelFftData.leftInterpHrirArray = nullptr;
    rightChannelFftData.rightInterpHrirArray = nullptr;
-}
+   */
 
+}
+/*
 //==============================================================================
 void HrtfPluginAudioProcessor::addHrirsToArray(){
 
@@ -217,7 +221,8 @@ hrir.add(Array<float>({
 hrir.add(Array<float>({
 0.00681412,-0.00122180,0.00707167,-0.00021792,0.00635518,0.00026690,0.00516480,0.00169160,0.00352822,0.00338066,0.00229193,0.00309160,0.00329898,0.00313559,0.00289923,0.00382347,0.00274979,0.00475710,0.00097604,0.00622390,0.00052272,0.00783867,-0.00364001,0.01266205,-0.00850180,0.01705893,-0.01522028,0.02523400,-0.02390593,0.03446779,-0.03745659,0.05797750,-0.02475007,0.10745306,-0.03600567,0.17216223,-0.02778252,0.22787773,-0.29730921,0.02050995,0.34411862,-0.18817236,0.23220541,-0.10894794,1.35870949,-0.60248258,0.14504574,0.34615617,-0.21291050,-0.53877005,-0.21289528,0.11515932,0.10761078,-0.20719842,-0.08501283,-0.02652884,0.13255396,-0.00724501,0.00928495,0.03755140,0.02178245,0.05586733,-0.02904943,-0.05680992,0.08032500,0.04235531,0.08377295,-0.04391447,0.06733762,-0.06736291,0.04606658,-0.10283633,-0.06142811,-0.13810093,-0.12460414,-0.06181393,-0.00035108,0.01675929,-0.06100230,-0.00192798,0.03143342,0.05234546,0.03668352,-0.00614503,-0.00769301,0.01038383,0.02978434,0.00117262,-0.00011049,-0.00874596,-0.00204874,-0.01596402,-0.00042758,-0.00918528,-0.00803257,-0.02134812,-0.00957056,-0.01160720,-0.00299181,-0.01785093,0.01604330,0.02659722,0.00960263,0.00828749,-0.01150272,0.00178656,-0.02352925,-0.02261229,-0.04997220,-0.03620474,-0.04507322,-0.00350812,-0.01410839,0.00611072,0.00912661,0.02484511,-0.00174937,-0.00092806,-0.00656827,0.00799291,-0.01303241,-0.02249993,-0.00619229,-0.02937902,0.00728311,-0.01029629,0.03189413,-0.01552860,-0.00729844,-0.01102601,-0.01623170,-0.01257226,-0.02793954,-0.01198258,-0.03018189,-0.02249099,0.00005829,0.00993571,0.01917349,-0.02791154,-0.01367208,-0.01193963,0.01094784,0.00462489,-0.01252160,-0.00840216,-0.01801260,0.00817142,-0.00643481,0.00183717,-0.01520074,-0.00589897,-0.00533501,-0.00409626,-0.00314252,-0.00210170,0.00249683,0.00089383,-0.00809507,0.00133301,0.00385149,0.00934780,-0.00349389,0.00110110,0.00027877,0.00285491,-0.00167045,-0.00146082,-0.00040375,0.00088712,0.00230200,0.00424761,0.00381584,0.00114184,0.00085952,0.00218448,-0.00222523,-0.00547495,-0.00282190,0.00375162,-0.00600581,-0.00249233,-0.00720096,0.00282806,-0.00666477,-0.00586416,0.00098328,-0.00309219,0.00517905,-0.00138392,0.01041616,0.00646287,0.00785794,0.01045076,0.00691003,0.00702986,-0.00339779,0.00879066,0.00428794,0.00849743,-0.00305355,0.00477536,0.00330051,0.00253643,0.00257537,-0.00344461,-0.00033647,-0.00756629,-0.00293094,-0.00197489,-0.00311673,-0.00001399,-0.00561053,0.00502253,-0.00282200,0.00525145,-0.00098319,0.00490785,-0.00132782,0.00284483,0.00580397,0.00455282,0.00137520,0.00083518,0.00690571,0.00167412,0.00155625,0.00035892,0.00269425,-0.00009036,-0.00327080,0.00369470,0.00098960,0.00516050,-0.00280988,0.00729729,-0.00006124,0.00481595,-0.00007894,0.00698359,-0.00104349,0.00417810,0.00008157,0.00911166,-0.00059349,0.00362992,0.00197944,0.00868472,0.00062631,0.00485169,0.00381361,0.00516791,-0.00104047,0.00396029,0.00188966,0.00446246,-0.00585280,0.00291765,-0.00369194,0.00310725,-0.00712687,0.00358524,-0.00368311,0.00054848,-0.00464587,0.00147213,-0.00207046,-0.00265456,-0.00250098,0.00295490,-0.00036293,-0.00076104,0.00018256,0.00671385,-0.00106099,-0.00051765,-0.00172796,0.00536670,-0.00212002,0.00320820,-0.00049072,0.00580174,-0.00203458,0.00560383,0.00567618,0.00634436,0.00119249,0.00634281,0.00811036,0.00799326,0.00382626,0.00816719,0.00616311,0.00043545,-0.00334904,0.00432312,-0.00370508,-0.00172505,-0.00448446,0.00452215,-0.00929028,-0.00903982,-0.00874913,-0.00574680,-0.01118733,-0.00267218,-0.00077741,-0.00211224,-0.00467076,0.00263729,0.00043436,-0.00094162,0.00002845,0.00876748,0.00269844,0.00436777,-0.00065861,0.01011188,-0.00244819,0.00239525,-0.00375158,0.00196138,-0.00697982,-0.00143301,-0.00182859,-0.00089012,-0.00885124,-0.00643179,-0.00151916,0.00320574,-0.00033326,0.00668271,0.00070937,0.00434206,-0.00182541,0.00752392,0.00615551,0.00441903,0.00119573,0.00068528,0.00314389,-0.00333701,-0.00035618,-0.00012730,-0.00260382,-0.00136309,-0.00450344,0.00522812,-0.00708473,0.00359623,-0.00417559,0.00502508,-0.00318023,-0.00111980,0.00170158,0.00186358,0.00184638,0.00015204,0.00950798,0.00229510,0.00378390,-0.00180792,0.00592195,0.00311989,0.00422438,-0.00158059,0.00283429,-0.00247129,0.00716633,0.00417529,0.00669254,-0.00349790,0.00464932,0.00519289,0.00825012,-0.00268311,0.00161992,0.00048276,0.00822375,-0.00108820,0.00390733,-0.00034765,0.00554307,-0.00395883,0.00853651,-0.00329651,0.00541674,-0.00551406,0.00269744,-0.00498593,0.00171407,-0.00081030,0.00958291,0.00252013,0.00344380,0.00646215,0.01364897,0.00258958,0.00268726,0.00285763,0.00995939,0.00557647,0.00761668,0.00564658,0.00600116,-0.00085052,0.00661966,0.00659311,0.01053626,0.00318158,0.00949250,0.00455480,0.00838752,-0.00326150,0.00616366,0.00425442,0.01037933,0.00663536,0.00834227,0.00472825,0.00561290,0.00743827,0.00775832,0.00685789,0.00085914,0.00663512,0.00522234,0.00673679,0.00278787,0.00635236,0.00168887,0.00366225,-0.00046210,0.00509228,0.00067531,0.00294778,0.00019214,0.00710923,0.00096335,0.00840989,-0.00007055,0.00976553,-0.00156698,0.00778726,0.00120678,0.00850322,0.00063141,0.00933665,0.00014476,0.00754447,0.00182295,0.00810207,0.00447625,0.00552861,0.00258436,0.00487712,0.00476032,0.00566458,0.00179146,0.00660159,0.00621723,0.00754433,0.00195970,0.00854245,0.00135273,0.00998004,-0.00071757,0.01090664,-0.00062472,0.00461638,0.00146338,0.00810551,0.00596809,0.00412275,0.00386478,0.00348825,0.00451235,0.00145149,0.00510160,0.00196624,-0.00152164,0.00441161,-0.00106341,0.01288006,-0.00333893,0.00876893,-0.00417680,0.00504905,-0.00019386,0.00594149,0.00579752,0.00150675,0.00421696,0.00117447,0.00720756,0.00085383,0.00790405,0.00270821,0.00593780,0.00105870,0.00572674,0.00399874,0.00426752,-0.00013594,0.00168414,0.00010405,0.00236504,-0.00113954,0.00326685,-0.00049377,0.00545285,-0.00307097
 }));
-}
+
+}*/
 //==============================================================================
 const String HrtfPluginAudioProcessor::getName() const
 {
@@ -398,10 +403,16 @@ void HrtfPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
                 leftChannelVariables.floorAmp = 1;
                 leftChannelVariables.ceilAmp = 0;
             }
+            /*
             leftChannelFftData.leftHrirArray = hrir.begin()+leftChannelVariables.flooredIndex;
             leftChannelFftData.rightHrirArray = hrir.begin()+leftChannelVariables.flooredIndex+1;
             leftChannelFftData.leftInterpHrirArray = hrir.begin()+((leftChannelVariables.flooredIndex+2)%hrir.size());
             leftChannelFftData.rightInterpHrirArray = hrir.begin()+((leftChannelVariables.flooredIndex+3)%hrir.size());
+            */
+            leftChannelFftData.leftHrirArray = hrir[leftChannelVariables.flooredIndex];
+            leftChannelFftData.rightHrirArray = hrir[leftChannelVariables.flooredIndex+1];
+            leftChannelFftData.leftInterpHrirArray = hrir[(leftChannelVariables.flooredIndex+2)%hrir.size()];
+            leftChannelFftData.rightInterpHrirArray = hrir[(leftChannelVariables.flooredIndex+3)%hrir.size()];
         }
 
         const float* leftChannelDataRead = buffer.getReadPointer(0);
@@ -412,18 +423,27 @@ void HrtfPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
 
                     //float tempFloorAmp = ((floorAmp-previousFloorAmp)/hrirLength*inputIndex)+previousFloorAmp;
                     //float tempCeilAmp = ((ceilAmp-previousCeilAmp)/hrirLength*inputIndex)+previousCeilAmp;
-                    /*
+                    /* //this is for linear interpolation
                     leftHRIR[inputIndex][0] = (*(leftHrirArray->begin()+inputIndex)*tempFloorAmp)
                     + (*(leftInterpHrirArray->begin()+inputIndex)*tempCeilAmp);
                     rightHRIR[inputIndex][0] = (*(rightHrirArray->begin()+inputIndex)*tempFloorAmp)
                     + (*(rightInterpHrirArray->begin()+inputIndex)*tempCeilAmp);
                     */
+
+/*
                     leftChannelFftData.leftHRIR[inputIndex][0] =
                     (*(leftChannelFftData.leftHrirArray->begin()+inputIndex)*leftChannelVariables.floorAmp)
                     + (*(leftChannelFftData.leftInterpHrirArray->begin()+inputIndex)*leftChannelVariables.ceilAmp);
                     leftChannelFftData.rightHRIR[inputIndex][0] =
                     (*(leftChannelFftData.rightHrirArray->begin()+inputIndex)*leftChannelVariables.floorAmp)
                     + (*(leftChannelFftData.rightInterpHrirArray->begin()+inputIndex)*leftChannelVariables.ceilAmp);
+*/
+                    leftChannelFftData.leftHRIR[inputIndex][0] =
+                    (leftChannelFftData.leftHrirArray[inputIndex]*leftChannelVariables.floorAmp)
+                    + (leftChannelFftData.leftInterpHrirArray[inputIndex]*leftChannelVariables.ceilAmp);
+                    leftChannelFftData.rightHRIR[inputIndex][0] =
+                    (leftChannelFftData.rightHrirArray[inputIndex]*leftChannelVariables.floorAmp)
+                    + (leftChannelFftData.rightInterpHrirArray[inputIndex]*leftChannelVariables.ceilAmp);
 
                 }else{
                     leftChannelFftData.leftHRIR[inputIndex][0] = 0;
@@ -475,10 +495,17 @@ void HrtfPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
                 rightChannelVariables.floorAmp = 1;
                 rightChannelVariables.ceilAmp = 0;
             }
+            /*
             rightChannelFftData.leftHrirArray = hrir.begin()+rightChannelVariables.flooredIndex;
             rightChannelFftData.rightHrirArray = hrir.begin()+rightChannelVariables.flooredIndex+1;
             rightChannelFftData.leftInterpHrirArray = hrir.begin()+((rightChannelVariables.flooredIndex+2)%hrir.size());
             rightChannelFftData.rightInterpHrirArray = hrir.begin()+((rightChannelVariables.flooredIndex+3)%hrir.size());
+        */
+            rightChannelFftData.leftHrirArray = hrir[rightChannelVariables.flooredIndex];
+            rightChannelFftData.rightHrirArray = hrir[rightChannelVariables.flooredIndex+1];
+            rightChannelFftData.leftInterpHrirArray = hrir[(rightChannelVariables.flooredIndex+2)%hrir.size()];
+            rightChannelFftData.rightInterpHrirArray = hrir[(rightChannelVariables.flooredIndex+3)%hrir.size()];
+
         }
 
 
@@ -496,12 +523,21 @@ void HrtfPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
                     rightHRIR[inputIndex][0] = (*(rightHrirArray->begin()+inputIndex)*tempFloorAmp)
                     + (*(rightInterpHrirArray->begin()+inputIndex)*tempCeilAmp);
                     */
+
+                    /*
                     rightChannelFftData.leftHRIR[inputIndex][0] =
                     (*(rightChannelFftData.leftHrirArray->begin()+inputIndex)*rightChannelVariables.floorAmp)
                     + (*(rightChannelFftData.leftInterpHrirArray->begin()+inputIndex)*rightChannelVariables.ceilAmp);
                     rightChannelFftData.rightHRIR[inputIndex][0] =
                     (*(rightChannelFftData.rightHrirArray->begin()+inputIndex)*rightChannelVariables.floorAmp)
                     + (*(rightChannelFftData.rightInterpHrirArray->begin()+inputIndex)*rightChannelVariables.ceilAmp);
+*/
+                    rightChannelFftData.leftHRIR[inputIndex][0] =
+                    (rightChannelFftData.leftHrirArray[inputIndex]*rightChannelVariables.floorAmp)
+                    + (rightChannelFftData.leftInterpHrirArray[inputIndex]*rightChannelVariables.ceilAmp);
+                    rightChannelFftData.rightHRIR[inputIndex][0] =
+                    (rightChannelFftData.rightHrirArray[inputIndex]*rightChannelVariables.floorAmp)
+                    + (rightChannelFftData.rightInterpHrirArray[inputIndex]*rightChannelVariables.ceilAmp);
 
                 }else{
                     rightChannelFftData.leftHRIR[inputIndex][0] = 0;
@@ -606,27 +642,37 @@ void HrtfPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
 
         if(sample < buffer.getNumSamples()){
             if(sample<samplesInpreviousOutput){
+            /*
                 leftChannelDataWrite[sample] = leftSample + *(leftPreviousOutput.begin()+sample);
                 rightChannelDataWrite[sample] = rightSample + *(rightPreviousOutput.begin()+sample);
+                */
+                leftChannelDataWrite[sample] = leftSample + leftPreviousOutput[sample];
+                rightChannelDataWrite[sample] = rightSample + rightPreviousOutput[sample];
             }else{
                 leftChannelDataWrite[sample] = leftSample;
                 rightChannelDataWrite[sample] = rightSample;
             }
         }
         else if(sample<samplesInpreviousOutput){
-            leftPreviousOutput.set(sample,(*(leftPreviousOutput.begin()+sample))+leftSample);
-            rightPreviousOutput.set(sample,(*(rightPreviousOutput.begin()+sample))+rightSample);
+           // leftPreviousOutput.set(sample,(*(leftPreviousOutput.begin()+sample))+leftSample);
+           // rightPreviousOutput.set(sample,(*(rightPreviousOutput.begin()+sample))+rightSample);
+            leftPreviousOutput[sample] += leftSample;
+            rightPreviousOutput[sample] += rightSample;
         }else{
-            leftPreviousOutput.add(leftSample);
-            rightPreviousOutput.add(rightSample);
+            //leftPreviousOutput.add(leftSample);
+            //rightPreviousOutput.add(rightSample);
+            leftPreviousOutput.push_back(leftSample);
+            rightPreviousOutput.push_back(rightSample);
         }
         outLeft[sample][0] = 0;
         outRight[sample][0] = 0;
     }
 
     if(samplesInpreviousOutput>0){
-        leftPreviousOutput.removeRange(0,buffer.getNumSamples());
-        rightPreviousOutput.removeRange(0,buffer.getNumSamples());
+        //leftPreviousOutput.removeRange(0,samplesInpreviousOutput);
+        //rightPreviousOutput.removeRange(0,samplesInpreviousOutput);
+        leftPreviousOutput.erase(leftPreviousOutput.begin(),leftPreviousOutput.begin()+samplesInpreviousOutput);
+        rightPreviousOutput.erase(rightPreviousOutput.begin(),rightPreviousOutput.begin()+samplesInpreviousOutput);
     }
 
     leftChannelVariables.outputRms = buffer.getRMSLevel(0,0,buffer.getNumSamples());
