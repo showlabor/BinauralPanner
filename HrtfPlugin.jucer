@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="TEt90m" name="BinauralPanner" projectType="audioplug" version="1.0.8"
+<JUCERPROJECT id="TEt90m" name="BinauralPanner" projectType="audioplug" version="1.0.9"
               bundleIdentifier="com.wingsplugins.binauralpanner" includeBinaryInAppConfig="1"
               buildVST="1" buildVST3="1" buildAU="1" buildAUv3="0" buildRTAS="0"
               buildAAX="0" pluginName="BinauralPanner" pluginDesc="BinauralPanner"
@@ -24,7 +24,8 @@
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <LINUX_MAKE targetFolder="Builds/LinuxMakefile" vstFolder="" extraLinkerFlags="-lfftw3f -lm">
+    <LINUX_MAKE targetFolder="Builds/LinuxMakefile" vstFolder="" extraLinkerFlags="-lfftw3f -lm"
+                externalLibraries="samplerate" cppLanguageStandard="-std=c++11">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
                        targetName="BinauralPanner"/>

@@ -16,6 +16,7 @@
 HrtfPluginAudioProcessorEditor::HrtfPluginAudioProcessorEditor (HrtfPluginAudioProcessor& p)
     : AudioProcessorEditor (&p), processor (p)
 {
+
     addAndMakeVisible (leftKnob);
     addAndMakeVisible (rightKnob);
     addAndMakeVisible (leftToggle);
@@ -68,10 +69,12 @@ HrtfPluginAudioProcessorEditor::HrtfPluginAudioProcessorEditor (HrtfPluginAudioP
 
     setSize (450, 205);
     startTimer(135);
+
 }
 
 HrtfPluginAudioProcessorEditor::~HrtfPluginAudioProcessorEditor()
 {
+
     //delete leftKnob;
     //delete rightKnob;
     leftKnob = nullptr;
@@ -79,20 +82,25 @@ HrtfPluginAudioProcessorEditor::~HrtfPluginAudioProcessorEditor()
     leftToggle = nullptr;
     rightToggle = nullptr;
     meter = nullptr;
+    title = nullptr;
+
 }
 
 //==============================================================================
 void HrtfPluginAudioProcessorEditor::paint (Graphics& g)
 {
+
     g.fillAll (Colour(73,73,73));
     //leftKnob->setValue(processor.azimuth->get());
    // g.setColour (Colours::black);
    // g.setFont (15.0f);
    // g.drawFittedText ("Hello World!", getLocalBounds(), Justification::centred, 1);
+
 }
 
 void HrtfPluginAudioProcessorEditor::resized()
 {
+
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
     leftKnob->setBounds(50,20,170,170);
@@ -103,17 +111,21 @@ void HrtfPluginAudioProcessorEditor::resized()
     rightToggle->changeWidthToFitText();
     meter->setBounds(50, 165, meter->getX(),meter->getY());
     title->setBounds(300,2,150,30);
+
 }
 
 void HrtfPluginAudioProcessorEditor::sliderValueChanged(Slider* slider){
+
     if(slider == leftKnob){
         processor.setAzimuth(0,slider->getValue());
     }else if (slider == rightKnob){
         processor.setAzimuth(1,slider->getValue());
     }
+
 }
 
 void HrtfPluginAudioProcessorEditor::buttonClicked(Button* button){
+
     if(button == (Button*)leftToggle){
         if(isLeftToggleOff){
             leftToggle->setButtonText("ON");
@@ -148,9 +160,11 @@ void HrtfPluginAudioProcessorEditor::buttonClicked(Button* button){
             isRightToggleOff = true;
         }
     }
+
 }
 
 void HrtfPluginAudioProcessorEditor::timerCallback(){
+
     if(processor.getAzimuth(0) != (float)(leftKnob->getValue())){
         leftKnob->setValue(processor.getAzimuth(0));
     }
@@ -159,4 +173,6 @@ void HrtfPluginAudioProcessorEditor::timerCallback(){
     }
     meter->setValue(0,processor.getRms(0));
     meter->setValue(1,processor.getRms(1));
+
 }
+
