@@ -23,6 +23,7 @@ class HrtfPluginAudioProcessorEditor  : public AudioProcessorEditor,
                                         public Slider::Listener,
                                         public TextButton::Listener,
                                         public Timer
+
 {
 public:
     HrtfPluginAudioProcessorEditor (HrtfPluginAudioProcessor&);
@@ -43,17 +44,10 @@ private:
     ScopedPointer<TextButton> leftToggle= new TextButton();
     ScopedPointer<TextButton> rightToggle= new TextButton();
     ScopedPointer<RmsMeter> meter = new RmsMeter(350,30,2);
-    Label* title = new Label();
+    ScopedPointer<Label> title = new Label();
     bool isLeftToggleOff, isRightToggleOff;
 
-    //TextButton* leftToggle= new TextButton();
-    //TextButton* rightToggle= new TextButton();
-    //Slider* leftKnob = new Slider();
-    //Slider* rightKnob = new Slider();
 
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
-    //float PI = 3.14159265359;
     HrtfPluginAudioProcessor& processor;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HrtfPluginAudioProcessorEditor)

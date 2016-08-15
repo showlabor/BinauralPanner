@@ -41,8 +41,8 @@
 namespace ProjectInfo
 {
     const char* const  projectName    = "BinauralPanner";
-    const char* const  versionString  = "1.0.8";
-    const int          versionNumber  = 0x10008;
+    const char* const  versionString  = "1.0.9";
+    const int          versionNumber  = 0x10009;
 }
 #endif
 
