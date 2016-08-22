@@ -12,6 +12,10 @@
               jucerVersion="4.2.3" pluginVSTCategory="">
   <MAINGROUP id="umqMW9" name="BinauralPanner">
     <GROUP id="{A0F5A324-FED4-FC3C-8935-7090E88E0EB8}" name="Source">
+      <FILE id="fTK4EQ" name="MultiChannelsFft.cpp" compile="1" resource="0"
+            file="Source/MultiChannelsFft.cpp"/>
+      <FILE id="nR3Gxa" name="MultiChannelsFft.h" compile="0" resource="0"
+            file="Source/MultiChannelsFft.h"/>
       <FILE id="k5fCdk" name="RmsMeter.cpp" compile="1" resource="0" file="Source/RmsMeter.cpp"/>
       <FILE id="MhJPNq" name="RmsMeter.h" compile="0" resource="0" file="Source/RmsMeter.h"/>
       <FILE id="HQmfXe" name="PluginProcessor.cpp" compile="1" resource="0"
