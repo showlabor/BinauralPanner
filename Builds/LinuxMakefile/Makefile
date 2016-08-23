@@ -49,6 +49,7 @@ ifeq ($(CONFIG),Release)
 endif
 
 OBJECTS := \
+  $(OBJDIR)/MultiChannelsFft_2361ebd4.o \
   $(OBJDIR)/RmsMeter_5783aada.o \
   $(OBJDIR)/PluginProcessor_a059e380.o \
   $(OBJDIR)/PluginEditor_94d4fb09.o \
@@ -84,6 +85,11 @@ clean:
 strip:
 	@echo Stripping BinauralPanner
 	-@strip --strip-unneeded $(OUTDIR)/$(TARGET)
+
+$(OBJDIR)/MultiChannelsFft_2361ebd4.o: ../../Source/MultiChannelsFft.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling MultiChannelsFft.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/RmsMeter_5783aada.o: ../../Source/RmsMeter.cpp
 	-@mkdir -p $(OBJDIR)

@@ -12,6 +12,10 @@
               jucerVersion="4.2.3" pluginVSTCategory="">
   <MAINGROUP id="umqMW9" name="BinauralPanner">
     <GROUP id="{A0F5A324-FED4-FC3C-8935-7090E88E0EB8}" name="Source">
+      <FILE id="fTK4EQ" name="MultiChannelsFft.cpp" compile="1" resource="0"
+            file="Source/MultiChannelsFft.cpp"/>
+      <FILE id="nR3Gxa" name="MultiChannelsFft.h" compile="0" resource="0"
+            file="Source/MultiChannelsFft.h"/>
       <FILE id="k5fCdk" name="RmsMeter.cpp" compile="1" resource="0" file="Source/RmsMeter.cpp"/>
       <FILE id="MhJPNq" name="RmsMeter.h" compile="0" resource="0" file="Source/RmsMeter.h"/>
       <FILE id="HQmfXe" name="PluginProcessor.cpp" compile="1" resource="0"
@@ -72,16 +76,16 @@
       </MODULEPATHS>
     </CODEBLOCKS_LINUX>
     <XCODE_MAC targetFolder="Builds/MacOSX" vstFolder="" extraLinkerFlags="-lfftw3f -lm"
-               vst3Folder="">
+               vst3Folder="" externalLibraries="samplerate">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="BinauralPanner"
                        headerPath="/usr/local/include" libraryPath="/usr/local/lib"
-                       osxArchitecture="64BitUniversal" osxCompatibility="10.10 SDK"
-                       osxSDK="default" cppLanguageStandard=""/>
+                       osxArchitecture="Native" osxCompatibility="10.10 SDK" osxSDK="default"
+                       cppLanguageStandard=""/>
         <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="BinauralPanner"
                        headerPath="/usr/local/include" libraryPath="/usr/local/lib"
-                       osxArchitecture="64BitUniversal" osxCompatibility="10.10 SDK"
-                       osxSDK="default" cppLanguageStandard="" linkTimeOptimisation="1"/>
+                       osxArchitecture="Native" osxCompatibility="10.10 SDK" osxSDK="default"
+                       cppLanguageStandard="" linkTimeOptimisation="1"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_video" path="../../juce/modules"/>
