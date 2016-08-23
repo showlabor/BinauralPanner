@@ -26,16 +26,7 @@ MultiChannelsFft::MultiChannelsFft(int channels,int newFftSize){
 }
 
 MultiChannelsFft::~MultiChannelsFft(){
-/*
-    for(int ch = 0 ; ch < numOfChannels; ch++){
-        fftwf_destroy_plan(inputFFTs[ch]);
-        fftwf_destroy_plan(leftHrirFFTs[ch]);
-        fftwf_destroy_plan(rightHrirFFTs[ch]);
-    }
-*/
 
-   // if(outRightIFFT)fftwf_destroy_plan(outRightIFFT);
-   // fftwf_cleanup();
 
 }
 
@@ -87,9 +78,10 @@ void MultiChannelsFft::copyInput(int channel, const float* inputSignal, int buff
         }
         inputIndex++;
     }
+    transformInput(channel);
 }
 
-void MultiChannelsFft::copyHRIR(int channel, const struct hrirData data){
+void MultiChannelsFft::copyHRIR(int channel, const hrirData* data){
 
     leftHRIRs[channel].assign(leftHRIRs[channel].size(),complex<float>(0,0));
     rightHRIRs[channel].assign(rightHRIRs[channel].size(),complex<float>(0,0));
@@ -97,43 +89,25 @@ void MultiChannelsFft::copyHRIR(int channel, const struct hrirData data){
     vector<float>::iterator leftHrirIt, interpLeftHrirIt, rightHrirIt, interpRightHrirIt;
     vector<complex<float>>::iterator channelLeftHrirIt, channelRightHrirIt;
 
-    for(leftHrirIt = data.hrirBegin[MultiChannelsFft::leftHRIR],
-        interpLeftHrirIt = data.hrirBegin[MultiChannelsFft::interpLeftHRIR],
+    for(leftHrirIt = data->hrirBegin[MultiChannelsFft::leftHRIR],
+        interpLeftHrirIt = data->hrirBegin[MultiChannelsFft::interpLeftHRIR],
         channelLeftHrirIt = leftHRIRs[channel].begin(),
-        rightHrirIt = data.hrirBegin[MultiChannelsFft::rightHRIR],
-        interpRightHrirIt = data.hrirBegin[MultiChannelsFft::interpRightHRIR],
+        rightHrirIt = data->hrirBegin[MultiChannelsFft::rightHRIR],
+        interpRightHrirIt = data->hrirBegin[MultiChannelsFft::interpRightHRIR],
         channelRightHrirIt = rightHRIRs[channel].begin();
-        leftHrirIt != data.hrirEnd[MultiChannelsFft::leftHRIR];
+        leftHrirIt != data->hrirEnd && channelLeftHrirIt != leftHRIRs[channel].end(); //all hrirs have the same length
         leftHrirIt++, interpLeftHrirIt++, channelLeftHrirIt++,
         rightHrirIt++, interpRightHrirIt++, channelRightHrirIt++
         ){
-            channelLeftHrirIt->real((*leftHrirIt)*data.floorAmp + (*interpLeftHrirIt)*data.ceilAmp);
-            channelRightHrirIt->real((*rightHrirIt)*data.floorAmp + (*interpRightHrirIt)*data.ceilAmp);
+            channelLeftHrirIt->real((*leftHrirIt)*data->floorAmp + (*interpLeftHrirIt)*data->ceilAmp);
+            channelRightHrirIt->real((*rightHrirIt)*data->floorAmp + (*interpRightHrirIt)*data->ceilAmp);
         }
 
+    transformHrir(channel);
 }
-void MultiChannelsFft::transformHrir(int channel){
-    fftwf_plan leftHrirPlan = fftwf_plan_dft_1d(fftSize, reinterpret_cast<fftwf_complex*>(leftHRIRs[channel].data()),reinterpret_cast<fftwf_complex*>(leftHRIRs[channel].data()),FFTW_FORWARD, FFTW_ESTIMATE);
-    fftwf_plan rightHrirPlan = fftwf_plan_dft_1d(fftSize, reinterpret_cast<fftwf_complex*>(rightHRIRs[channel].data()),reinterpret_cast<fftwf_complex*>(rightHRIRs[channel].data()),FFTW_FORWARD, FFTW_ESTIMATE);
-    fftwf_execute(leftHrirPlan);
-    fftwf_execute(rightHrirPlan);
-    fftwf_destroy_plan(leftHrirPlan);
-    fftwf_destroy_plan(rightHrirPlan);
-}
-void MultiChannelsFft::transformInput(int channel){
-    fftwf_plan inputPlan = fftwf_plan_dft_1d(fftSize, reinterpret_cast<fftwf_complex*>(inputSignals[channel].data()),reinterpret_cast<fftwf_complex*>(inputSignals[channel].data()),FFTW_FORWARD, FFTW_ESTIMATE);
-    fftwf_execute(inputPlan);
-    fftwf_destroy_plan(inputPlan);
-}
-void MultiChannelsFft::transformOutputs(){
-    fftwf_plan leftOutPlan = fftwf_plan_dft_1d(fftSize, reinterpret_cast<fftwf_complex*>(outLeft.data()),reinterpret_cast<fftwf_complex*>(outLeft.data()),FFTW_BACKWARD, FFTW_ESTIMATE);
-    fftwf_plan rightOutPlan = fftwf_plan_dft_1d(fftSize, reinterpret_cast<fftwf_complex*>(outRight.data()),reinterpret_cast<fftwf_complex*>(outRight.data()),FFTW_BACKWARD, FFTW_ESTIMATE);
-    fftwf_execute(leftOutPlan);
-    fftwf_execute(rightOutPlan);
-    fftwf_destroy_plan(leftOutPlan);
-    fftwf_destroy_plan(rightOutPlan);
-}
+
 void MultiChannelsFft::convolveOneChannel(int channel){
+    /*
     vector<complex<float>>::iterator leftOutIt, rightOutIt, inputIt, leftHrirIt, rightHrirIt;
     for(
     leftOutIt = outLeft.begin(), rightOutIt = outRight.begin(),
@@ -144,8 +118,15 @@ void MultiChannelsFft::convolveOneChannel(int channel){
         (*leftOutIt) = (*inputIt)*(*leftHrirIt);
         (*rightOutIt) = (*inputIt)*(*rightHrirIt);
     }
+    */
+    for(int i=0;i<fftSize;i++){
+     outLeft[i]=inputSignals[channel][i]*leftHRIRs[channel][i];
+     outRight[i]=inputSignals[channel][i]*rightHRIRs[channel][i];
+    }
+    transformOutputs();
 }
 void MultiChannelsFft::convolveAll(){
+/*
     vector<complex<float>>::iterator leftOutIt, rightOutIt, leftInputIt, rightInputIt,
     leftChannelLeftHrirIt, leftChannelRightHrirIt,
     rightChannelLeftHrirIt, rightChannelRightHrirIt;
@@ -160,10 +141,13 @@ void MultiChannelsFft::convolveAll(){
     rightChannelLeftHrirIt++, rightChannelRightHrirIt++){
         (*leftOutIt) = (*leftInputIt)*(*leftChannelLeftHrirIt) + (*rightInputIt)*(*rightChannelLeftHrirIt);
         (*rightOutIt) = (*leftInputIt)*(*leftChannelRightHrirIt) + (*rightInputIt)*(*rightChannelRightHrirIt);
-      // (*leftOutIt) = (*leftInputIt) + (*rightInputIt);
-      // (*rightOutIt) = (*leftInputIt) + (*rightInputIt);
-
     }
+    */
+    for(int i=0;i<fftSize;i++){
+        outLeft[i] = inputSignals[0][i]*leftHRIRs[0][i] + inputSignals[1][i]*leftHRIRs[1][i];
+        outRight[i] = inputSignals[0][i]*rightHRIRs[0][i] + inputSignals[1][i]*rightHRIRs[1][i];
+    }
+    transformOutputs();
 }
 
 float MultiChannelsFft::getOutput(int channel, int idx){
@@ -188,6 +172,40 @@ void MultiChannelsFft::clearOutputs(){
     outRight.assign(outLeft.size(),complex<float>(0,0));
 }
 
+void MultiChannelsFft::clearOneOutput(int channel){
+    switch(channel){
+        case 0:
+            outLeft.assign(outLeft.size(),complex<float>(0,0));
+            break;
+        case 1:
+            outRight.assign(outLeft.size(),complex<float>(0,0));
+            break;
+    }
+}
+/*
 float MultiChannelsFft::getHrirDebug(int channel, int idx){
     return leftHRIRs[channel].size();
+}
+*/
+
+void MultiChannelsFft::transformOutputs(){
+    fftwf_plan leftOutPlan = fftwf_plan_dft_1d(fftSize, reinterpret_cast<fftwf_complex*>(outLeft.data()),reinterpret_cast<fftwf_complex*>(outLeft.data()),FFTW_BACKWARD, FFTW_ESTIMATE);
+    fftwf_plan rightOutPlan = fftwf_plan_dft_1d(fftSize, reinterpret_cast<fftwf_complex*>(outRight.data()),reinterpret_cast<fftwf_complex*>(outRight.data()),FFTW_BACKWARD, FFTW_ESTIMATE);
+    fftwf_execute(leftOutPlan);
+    fftwf_execute(rightOutPlan);
+    fftwf_destroy_plan(leftOutPlan);
+    fftwf_destroy_plan(rightOutPlan);
+}
+void MultiChannelsFft::transformHrir(int channel){
+    fftwf_plan leftHrirPlan = fftwf_plan_dft_1d(fftSize, reinterpret_cast<fftwf_complex*>(leftHRIRs[channel].data()),reinterpret_cast<fftwf_complex*>(leftHRIRs[channel].data()),FFTW_FORWARD, FFTW_ESTIMATE);
+    fftwf_plan rightHrirPlan = fftwf_plan_dft_1d(fftSize, reinterpret_cast<fftwf_complex*>(rightHRIRs[channel].data()),reinterpret_cast<fftwf_complex*>(rightHRIRs[channel].data()),FFTW_FORWARD, FFTW_ESTIMATE);
+    fftwf_execute(leftHrirPlan);
+    fftwf_execute(rightHrirPlan);
+    fftwf_destroy_plan(leftHrirPlan);
+    fftwf_destroy_plan(rightHrirPlan);
+}
+void MultiChannelsFft::transformInput(int channel){
+    fftwf_plan inputPlan = fftwf_plan_dft_1d(fftSize, reinterpret_cast<fftwf_complex*>(inputSignals[channel].data()),reinterpret_cast<fftwf_complex*>(inputSignals[channel].data()),FFTW_FORWARD, FFTW_ESTIMATE);
+    fftwf_execute(inputPlan);
+    fftwf_destroy_plan(inputPlan);
 }

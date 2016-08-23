@@ -23,40 +23,43 @@ class MultiChannelsFft{
     MultiChannelsFft();
     MultiChannelsFft(int channels, int newFftSize);
     ~MultiChannelsFft();
-    void resizeComplexArrays(int newFftSize);
-    void resizeChannels(int channels);
-    void copyInput(int channel, const float* inputSignal, int bufferSize);
-    void transformHrir (int channel);
-    void transformInput (int channel);
-    void transformOutputs ();
-    void convolveOneChannel(int channel);
-    void convolveAll();
-    float getOutput(int channel, int idx);
-    int getFftSize();
-    void clearOutputs();
-    float getHrirDebug(int ch, int idx);
-
-
 
     enum HrirID {leftHRIR = 0, rightHRIR, interpLeftHRIR, interpRightHRIR };
     struct hrirData{
         float floorAmp, ceilAmp;
         vector<float>::iterator hrirBegin [4];
-        vector<float>::iterator hrirEnd [4];
+        vector<float>::iterator hrirEnd;
     };
-    void copyHRIR(int channel, const struct hrirData data);
+
+    void resizeComplexArrays(int newFftSize);
+    void resizeChannels(int channels);
+    void copyInput(int channel, const float* inputSignal, int bufferSize);
+    void copyHRIR(int channel, const hrirData* data);
+    void convolveOneChannel(int channel);
+    void convolveAll();
+    float getOutput(int channel, int idx);
+    int getFftSize();
+    void clearOutputs();
+    void clearOneOutput(int channel);
+   // float getHrirDebug(int ch, int idx);
+
+
+
+
 
     private:
     int fftSize = 1024;
     int numOfChannels = 2;
-
-
 
     vector<vector<complex<float>>> inputSignals = vector<vector<complex<float>>>(numOfChannels,vector<complex<float>>(fftSize,complex<float>(0,0)));
     vector<vector<complex<float>>> leftHRIRs = vector<vector<complex<float>>>(numOfChannels,vector<complex<float>>(fftSize,complex<float>(0,0)));
     vector<vector<complex<float>>> rightHRIRs = vector<vector<complex<float>>>(numOfChannels,vector<complex<float>>(fftSize,complex<float>(0,0)));
     vector<complex<float>> outLeft = vector<complex<float>>(fftSize,complex<float>(0,0));
     vector<complex<float>> outRight = vector<complex<float>>(fftSize,complex<float>(0,0));
+
+    void transformOutputs ();
+    void transformHrir (int channel);
+    void transformInput (int channel);
 /*
     fftwf_plan outLeftIFFT =  fftwf_plan_dft_1d(fftSize, reinterpret_cast<fftwf_complex*>(outLeft.data()),reinterpret_cast<fftwf_complex*>(outLeft.data()),FFTW_BACKWARD, FFTW_ESTIMATE);
 

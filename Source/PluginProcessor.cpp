@@ -121,68 +121,21 @@ void HrtfPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
 {
 
     if(hrirSampleRate != (int)sampleRate){
-    //DBG(sampleRate);
-    //DBG(hrirSampleRate);
-    //DBG(hrirLength);
         resampleHRIR(sampleRate);
     }
     multiChannelsFft.resizeComplexArrays(powerOfTwoConst[(int)std::ceil(std::log(samplesPerBlock+hrirLength-1)/std::log(2))]);
-    DBG(powerOfTwoConst[(int)std::ceil(std::log(samplesPerBlock+hrirLength-1)/std::log(2))]);
+    //DBG(powerOfTwoConst[(int)std::ceil(std::log(samplesPerBlock+hrirLength-1)/std::log(2))]);
     //call the resizeChannels if more than 2 channels are required
-/*
-    //initialize fftSize fftw arrays and fftw plans
-    //fftSize = std::pow(2,std::ceil(std::log(samplesPerBlock+hrirLength-1)/std::log(2)));
-    if(!isFftwPrepared){
-    fftSize = powerOfTwoConst[(int)std::ceil(std::log(samplesPerBlock+hrirLength-1)/std::log(2))];
 
-    leftChannelFftData.inputSignal = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex)*fftSize);
-    leftChannelFftData.leftHRIR = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex)*fftSize);
-    leftChannelFftData.rightHRIR = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex)*fftSize);
-
-    rightChannelFftData.inputSignal = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex)*fftSize);
-    rightChannelFftData.leftHRIR = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex)*fftSize);
-    rightChannelFftData.rightHRIR = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex)*fftSize);
-
-    outLeft = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex)*fftSize);
-    outRight = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex)*fftSize);
-
-    for(int i =0; i<fftSize ;i++){
-        outLeft[i][0] = 0;
-        outRight[i][0] = 0;
-    }
-
-    leftChannelFftData.inputFFT =
-    fftwf_plan_dft_1d(fftSize, leftChannelFftData.inputSignal, leftChannelFftData.inputSignal, FFTW_FORWARD, FFTW_ESTIMATE);
-    leftChannelFftData.leftHrirFFT =
-    fftwf_plan_dft_1d(fftSize, leftChannelFftData.leftHRIR, leftChannelFftData.leftHRIR, FFTW_FORWARD, FFTW_ESTIMATE);
-    leftChannelFftData.rightHrirFFT =
-    fftwf_plan_dft_1d(fftSize, leftChannelFftData.rightHRIR, leftChannelFftData.rightHRIR, FFTW_FORWARD, FFTW_ESTIMATE);
-
-    rightChannelFftData.inputFFT =
-    fftwf_plan_dft_1d(fftSize, rightChannelFftData.inputSignal, rightChannelFftData.inputSignal, FFTW_FORWARD, FFTW_ESTIMATE);
-    rightChannelFftData.leftHrirFFT =
-    fftwf_plan_dft_1d(fftSize, rightChannelFftData.leftHRIR, rightChannelFftData.leftHRIR, FFTW_FORWARD, FFTW_ESTIMATE);
-    rightChannelFftData.rightHrirFFT =
-    fftwf_plan_dft_1d(fftSize, rightChannelFftData.rightHRIR, rightChannelFftData.rightHRIR, FFTW_FORWARD, FFTW_ESTIMATE);
-
-    outLeftIFFT = fftwf_plan_dft_1d(fftSize, outLeft, outLeft, FFTW_BACKWARD, FFTW_ESTIMATE);
-    outRightIFFT = fftwf_plan_dft_1d(fftSize, outRight, outRight, FFTW_BACKWARD, FFTW_ESTIMATE);
-
-    isFftwPrepared = true;
-    }
-*/
     leftChannelVariables.isFirstBuffer = true;
     rightChannelVariables.isFirstBuffer = true;
-    DBG(multiChannelsFft.getHrirDebug(0,0));
+    //DBG(multiChannelsFft.getHrirDebug(0,0));
     DBG("Prepared");
 
 }
 
 void HrtfPluginAudioProcessor::releaseResources()
 {
-// Ardour 4 will crash if fftw resources are destroyed here, free the memory in the destructor
-
-
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -212,10 +165,10 @@ bool HrtfPluginAudioProcessor::setPreferredBusArrangement (bool isInput, int bus
 
 void HrtfPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
-
+    bool isStereo = buffer.getNumChannels()>1? true:false;
     //store the input RMS value -> used for auto muting
     leftChannelVariables.inputRms = buffer.getRMSLevel(0,0,buffer.getNumSamples());
-    if(buffer.getNumChannels()>1){
+    if(isStereo){
         rightChannelVariables.inputRms = buffer.getRMSLevel(1,0,buffer.getNumSamples());
     }else{
         rightChannelVariables.inputRms =0;
@@ -223,6 +176,7 @@ void HrtfPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
 
 //Left channel Processing
 //Copy Hrir vectors
+//-----------------------------------------------------------------------------------------------
     if(leftChannelVariables.inputRms>0 && !leftChannelVariables.isMute){
 
         bool updateLeftHrir = (leftChannelVariables.azimuth->get()==leftChannelVariables.previousAzimuth)
@@ -236,205 +190,145 @@ void HrtfPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
             MultiChannelsFft::hrirData currentHrir;
             float rawParam = leftChannelVariables.azimuth->get()+360;
             if(std::floor(rawParam)!=rawParam){
-               // leftChannelVariables.ceilAmp = std::sqrt(1-rawParam+std::floor(rawParam));
-               // leftChannelVariables.floorAmp = std::sqrt(rawParam-std::floor(rawParam));
                 currentHrir.ceilAmp = std::sqrt(1-rawParam+std::floor(rawParam));
                 currentHrir.floorAmp = std::sqrt(rawParam-std::floor(rawParam));
             }else{
-                //leftChannelVariables.floorAmp = 1;
-                //leftChannelVariables.ceilAmp = 0;
                 currentHrir.floorAmp = 1;
                 currentHrir.ceilAmp = 0;
             }
-
-           // leftChannelFftData.leftHrirArray = hrir[leftChannelVariables.flooredIndex];
-           // leftChannelFftData.rightHrirArray = hrir[leftChannelVariables.flooredIndex+1];
-           // leftChannelFftData.leftInterpHrirArray = hrir[(leftChannelVariables.flooredIndex+2)%hrir.size()];
-           // leftChannelFftData.rightInterpHrirArray = hrir[(leftChannelVariables.flooredIndex+3)%hrir.size()];
-            DBG("beforeHRIRCopy");
-            DBG(multiChannelsFft.getHrirDebug(0,0));
-
-
             currentHrir.hrirBegin[MultiChannelsFft::leftHRIR] = hrir[leftChannelVariables.flooredIndex].begin();
             currentHrir.hrirBegin[MultiChannelsFft::rightHRIR] = hrir[leftChannelVariables.flooredIndex+1].begin();
             currentHrir.hrirBegin[MultiChannelsFft::interpLeftHRIR] = hrir[(leftChannelVariables.flooredIndex+2)%hrir.size()].begin();
             currentHrir.hrirBegin[MultiChannelsFft::interpRightHRIR] = hrir[(leftChannelVariables.flooredIndex+3)%hrir.size()].begin();
 
-            currentHrir.hrirEnd[MultiChannelsFft::leftHRIR] = hrir[leftChannelVariables.flooredIndex].end();
-            currentHrir.hrirEnd[MultiChannelsFft::rightHRIR] = hrir[leftChannelVariables.flooredIndex+1].end();
-            currentHrir.hrirEnd[MultiChannelsFft::interpLeftHRIR] = hrir[(leftChannelVariables.flooredIndex+2)%hrir.size()].end();
-            currentHrir.hrirEnd[MultiChannelsFft::interpRightHRIR] = hrir[(leftChannelVariables.flooredIndex+3)%hrir.size()].end();
-
-            multiChannelsFft.copyHRIR(0,currentHrir);
-             DBG("afterFirstHRIRCopy");
-            DBG(multiChannelsFft.getHrirDebug(0,0));
-
-
+            currentHrir.hrirEnd = hrir[leftChannelVariables.flooredIndex].end();
+            //currentHrir.hrirEnd[MultiChannelsFft::rightHRIR] = hrir[leftChannelVariables.flooredIndex+1].end();
+            //currentHrir.hrirEnd[MultiChannelsFft::interpLeftHRIR] = hrir[(leftChannelVariables.flooredIndex+2)%hrir.size()].end();
+            //currentHrir.hrirEnd[MultiChannelsFft::interpRightHRIR] = hrir[(leftChannelVariables.flooredIndex+3)%hrir.size()].end();
+            multiChannelsFft.copyHRIR(0,&currentHrir);
+           //  DBG("afterFirstHRIRCopy");
+          //  DBG(multiChannelsFft.getHrirDebug(0,0));
+           // multiChannelsFft.transformHrir(0);
        }
-
-
-//merge HRIR, copy input data and zero padding
-        //const float* leftChannelDataRead = buffer.getReadPointer(0);
         multiChannelsFft.copyInput(0,buffer.getReadPointer(0),buffer.getNumSamples());
-
-        if(updateLeftHrir){
-            //fftwf_execute(leftChannelFftData.leftHrirFFT);
-            //fftwf_execute(leftChannelFftData.rightHrirFFT);
-            multiChannelsFft.transformHrir(0);
-            DBG("afterFirstTransform");
-            DBG(multiChannelsFft.getHrirDebug(0,0));
-             //DBG(multiChannelsFft.getHrirDebug(0,0));
-        }
-        //fftwf_execute(leftChannelFftData.inputFFT);
-        multiChannelsFft.transformInput(0);
-        //if(updateLeftHrir){
-        //DBG("afterFirstInputTransform");
-       // DBG(multiChannelsFft.getHrirDebug(0,0));
+       // if(updateLeftHrir){
+        //    multiChannelsFft.transformHrir(0);
         //}
-
+       // multiChannelsFft.transformInput(0);
     }else{
         buffer.clear(0,0,buffer.getNumSamples());
         leftChannelVariables.isFirstBuffer = true;
     }
 
 //Right channel Processing
-    if(buffer.getNumChannels()>1){
-     if(rightChannelVariables.inputRms>0 && !rightChannelVariables.isMute ){
+//-----------------------------------------------------------------------------------------------
+    if(isStereo){
+        if(rightChannelVariables.inputRms>0 && !rightChannelVariables.isMute ){
 
-        bool updateRightHrir = (rightChannelVariables.azimuth->get()==rightChannelVariables.previousAzimuth)
-        &&(!rightChannelVariables.isFirstBuffer)?false:true;
-        rightChannelVariables.previousAzimuth = rightChannelVariables.azimuth->get();
+            bool updateRightHrir = (rightChannelVariables.azimuth->get()==rightChannelVariables.previousAzimuth)
+            &&(!rightChannelVariables.isFirstBuffer)?false:true;
+            rightChannelVariables.previousAzimuth = rightChannelVariables.azimuth->get();
 
-        if(updateRightHrir){
-            rightChannelVariables.isFirstBuffer = false;
-            rightChannelVariables.flooredIndex = getHrirIndex(1);
-            //DBG("Loading Hrir "+rightChannelVariables.flooredIndex);
-            float rawParam = rightChannelVariables.azimuth->get()+360;
-            MultiChannelsFft::hrirData currentHrir;
-            if(std::floor(rawParam)!=rawParam){
-                //rightChannelVariables.ceilAmp = std::sqrt(1-rawParam+std::floor(rawParam));
-                //rightChannelVariables.floorAmp = std::sqrt(rawParam-std::floor(rawParam));
-                currentHrir.ceilAmp = std::sqrt(1-rawParam+std::floor(rawParam));
-                currentHrir.floorAmp = std::sqrt(rawParam-std::floor(rawParam));
-            }else{
-                //rightChannelVariables.floorAmp = 1;
-                //rightChannelVariables.ceilAmp = 0;
-                currentHrir.floorAmp = 1;
-                currentHrir.ceilAmp = 0;
+            if(updateRightHrir){
+                rightChannelVariables.isFirstBuffer = false;
+                rightChannelVariables.flooredIndex = getHrirIndex(1);
+                //DBG("Loading Hrir "+rightChannelVariables.flooredIndex);
+                float rawParam = rightChannelVariables.azimuth->get()+360;
+                MultiChannelsFft::hrirData currentHrir;
+                if(std::floor(rawParam)!=rawParam){
+                    currentHrir.ceilAmp = std::sqrt(1-rawParam+std::floor(rawParam));
+                    currentHrir.floorAmp = std::sqrt(rawParam-std::floor(rawParam));
+                }else{
+                    currentHrir.floorAmp = 1;
+                    currentHrir.ceilAmp = 0;
+                }
+                currentHrir.hrirBegin[MultiChannelsFft::leftHRIR] = hrir[rightChannelVariables.flooredIndex].begin();
+                currentHrir.hrirBegin[MultiChannelsFft::rightHRIR] = hrir[rightChannelVariables.flooredIndex+1].begin();
+                currentHrir.hrirBegin[MultiChannelsFft::interpLeftHRIR] = hrir[(rightChannelVariables.flooredIndex+2)%hrir.size()].begin();
+                currentHrir.hrirBegin[MultiChannelsFft::interpRightHRIR] = hrir[(rightChannelVariables.flooredIndex+3)%hrir.size()].begin();
+
+                currentHrir.hrirEnd = hrir[rightChannelVariables.flooredIndex].end();
+                //currentHrir.hrirEnd[MultiChannelsFft::rightHRIR] = hrir[rightChannelVariables.flooredIndex+1].end();
+                //currentHrir.hrirEnd[MultiChannelsFft::interpLeftHRIR] = hrir[(rightChannelVariables.flooredIndex+2)%hrir.size()].end();
+                //currentHrir.hrirEnd[MultiChannelsFft::interpRightHRIR] = hrir[(rightChannelVariables.flooredIndex+3)%hrir.size()].end();
+                multiChannelsFft.copyHRIR(1,&currentHrir);
             }
-            DBG("beforeRightHRIRCopy");
-            DBG(multiChannelsFft.getHrirDebug(0,0));
-            //rightChannelFftData.leftHrirArray = hrir[rightChannelVariables.flooredIndex];
-            //rightChannelFftData.rightHrirArray = hrir[rightChannelVariables.flooredIndex+1];
-            //rightChannelFftData.leftInterpHrirArray = hrir[(rightChannelVariables.flooredIndex+2)%hrir.size()];
-            //rightChannelFftData.rightInterpHrirArray = hrir[(rightChannelVariables.flooredIndex+3)%hrir.size()];
-            currentHrir.hrirBegin[MultiChannelsFft::leftHRIR] = hrir[rightChannelVariables.flooredIndex].begin();
-            currentHrir.hrirBegin[MultiChannelsFft::rightHRIR] = hrir[rightChannelVariables.flooredIndex+1].begin();
-            currentHrir.hrirBegin[MultiChannelsFft::interpLeftHRIR] = hrir[(rightChannelVariables.flooredIndex+2)%hrir.size()].begin();
-            currentHrir.hrirBegin[MultiChannelsFft::interpRightHRIR] = hrir[(rightChannelVariables.flooredIndex+3)%hrir.size()].begin();
-
-            currentHrir.hrirEnd[MultiChannelsFft::leftHRIR] = hrir[rightChannelVariables.flooredIndex].end();
-            currentHrir.hrirEnd[MultiChannelsFft::rightHRIR] = hrir[rightChannelVariables.flooredIndex+1].end();
-            currentHrir.hrirEnd[MultiChannelsFft::interpLeftHRIR] = hrir[(rightChannelVariables.flooredIndex+2)%hrir.size()].end();
-            currentHrir.hrirEnd[MultiChannelsFft::interpRightHRIR] = hrir[(rightChannelVariables.flooredIndex+3)%hrir.size()].end();
-
-            multiChannelsFft.copyHRIR(1,currentHrir);
-            DBG("afterRightHRIRCopy");
-            DBG(multiChannelsFft.getHrirDebug(0,0));
-
+            multiChannelsFft.copyInput(1,buffer.getReadPointer(1),buffer.getNumSamples());
+           // if(updateRightHrir){
+           //    multiChannelsFft.transformHrir(1);
+           // }
+          // multiChannelsFft.transformInput(1);
+        }else{
+            buffer.clear(1,0,buffer.getNumSamples());
+            rightChannelVariables.isFirstBuffer = true;
         }
-        multiChannelsFft.copyInput(1,buffer.getReadPointer(1),buffer.getNumSamples());
-       // const float* rightChannelDataRead = buffer.getReadPointer(1);
-        if(updateRightHrir){
-            //fftwf_execute(rightChannelFftData.leftHrirFFT);
-           // fftwf_execute(rightChannelFftData.rightHrirFFT);
-           multiChannelsFft.transformHrir(1);
-           DBG("rightChannelFirstTransform");
-           DBG(multiChannelsFft.getHrirDebug(0,0));
-        }
-       //fftwf_execute(rightChannelFftData.inputFFT);
-       multiChannelsFft.transformInput(1);
-    }else{
-        buffer.clear(1,0,buffer.getNumSamples());
-        rightChannelVariables.isFirstBuffer = true;
     }
-}
 
 //multiply the inputs and the Hrirs
+//-----------------------------------------------------------------------------------------------
     if (leftChannelVariables.inputRms > 0 && rightChannelVariables.inputRms > 0 && !leftChannelVariables.isMute && !rightChannelVariables.isMute){
         multiChannelsFft.convolveAll();
-        multiChannelsFft.transformOutputs();
-      
     }
     else if(leftChannelVariables.inputRms > 0 && !leftChannelVariables.isMute){
         multiChannelsFft.convolveOneChannel(0);
-        multiChannelsFft.transformOutputs();
-    
+
     } else if (rightChannelVariables.inputRms > 0 && !rightChannelVariables.isMute){
         multiChannelsFft.convolveOneChannel(1);
-        multiChannelsFft.transformOutputs();
-    
     }
 
 //put the result to the buffer
-    if(buffer.getNumChannels()>1) {
-    float* leftChannelDataWrite = buffer.getWritePointer(0);
-    float* rightChannelDataWrite = buffer.getWritePointer(1);
-    int samplesInpreviousOutput = leftPreviousOutput.size();
+//-----------------------------------------------------------------------------------------------
+    if(isStereo) {
+        int maxOutputLength = buffer.getNumSamples()+hrirLength-1;
+        int samplesInpreviousOutput = leftPreviousOutput.size();
+        float leftSample, rightSample;
+        float* leftChannelDataWrite = buffer.getWritePointer(0);
+        float* rightChannelDataWrite = buffer.getWritePointer(1);
 
-    for(int sample = 0; sample < multiChannelsFft.getFftSize();sample++){
+        for(int sample = 0; sample < maxOutputLength;sample++){
 
-        //float leftSample = outLeft[sample][0]/fftSize;
-        //float rightSample = outRight[sample][0]/fftSize;
+            leftSample = multiChannelsFft.getOutput(0,sample);
+            rightSample = multiChannelsFft.getOutput(1,sample);
 
-        float leftSample = multiChannelsFft.getOutput(0,sample);
-        float rightSample = multiChannelsFft.getOutput(1,sample);
-       // if(sample == 100) {DBG(leftSample);}
-
-        if(sample < buffer.getNumSamples()){
-            if(sample<samplesInpreviousOutput){
-                leftChannelDataWrite[sample] = leftSample + leftPreviousOutput[sample];
-                rightChannelDataWrite[sample] = rightSample + rightPreviousOutput[sample];
+            if(sample < buffer.getNumSamples()){
+                if(sample<samplesInpreviousOutput){
+                    leftChannelDataWrite[sample] = leftSample + leftPreviousOutput[sample];
+                    rightChannelDataWrite[sample] = rightSample + rightPreviousOutput[sample];
+                }else{
+                    leftChannelDataWrite[sample] = leftSample;
+                    rightChannelDataWrite[sample] = rightSample;
+                }
+            }
+            else if(sample<samplesInpreviousOutput){
+                leftPreviousOutput[sample] += leftSample;
+                rightPreviousOutput[sample] += rightSample;
             }else{
-                leftChannelDataWrite[sample] = leftSample;
-                rightChannelDataWrite[sample] = rightSample;
+                leftPreviousOutput.push_back(leftSample);
+                rightPreviousOutput.push_back(rightSample);
             }
         }
-        else if(sample<samplesInpreviousOutput){
-            leftPreviousOutput[sample] += leftSample;
-            rightPreviousOutput[sample] += rightSample;
-        }else{
-            leftPreviousOutput.push_back(leftSample);
-            rightPreviousOutput.push_back(rightSample);
+        multiChannelsFft.clearOutputs();
+
+        if(samplesInpreviousOutput > buffer.getNumSamples()){
+            leftPreviousOutput.erase(leftPreviousOutput.begin(),leftPreviousOutput.begin()+buffer.getNumSamples());
+            rightPreviousOutput.erase(rightPreviousOutput.begin(),rightPreviousOutput.begin()+buffer.getNumSamples());
+        }else if(samplesInpreviousOutput>0){
+            leftPreviousOutput.erase(leftPreviousOutput.begin(),leftPreviousOutput.begin()+samplesInpreviousOutput);
+            rightPreviousOutput.erase(rightPreviousOutput.begin(),rightPreviousOutput.begin()+samplesInpreviousOutput);
         }
-       // outLeft[sample][0] = 0;
-       // outRight[sample][0] = 0;
-    }
-    multiChannelsFft.clearOutputs();
 
-    if(samplesInpreviousOutput > buffer.getNumSamples()){
-        leftPreviousOutput.erase(leftPreviousOutput.begin(),leftPreviousOutput.begin()+buffer.getNumSamples());
-        rightPreviousOutput.erase(rightPreviousOutput.begin(),rightPreviousOutput.begin()+buffer.getNumSamples());
-    }else if(samplesInpreviousOutput>0){
-        leftPreviousOutput.erase(leftPreviousOutput.begin(),leftPreviousOutput.begin()+samplesInpreviousOutput);
-        rightPreviousOutput.erase(rightPreviousOutput.begin(),rightPreviousOutput.begin()+samplesInpreviousOutput);
-    }
-
-    leftChannelVariables.outputRms = buffer.getRMSLevel(0,0,buffer.getNumSamples());
-    rightChannelVariables.outputRms = buffer.getRMSLevel(1,0,buffer.getNumSamples());
-}else{
-        
-        float* leftChannelDataWrite = buffer.getWritePointer(0);
+        leftChannelVariables.outputRms = buffer.getRMSLevel(0,0,buffer.getNumSamples());
+        rightChannelVariables.outputRms = buffer.getRMSLevel(1,0,buffer.getNumSamples());
+    }else{
         int samplesInpreviousOutput = leftPreviousOutput.size();
-        
-        for(int sample = 0; sample < multiChannelsFft.getFftSize();sample++){
-            
-            //float leftSample = outLeft[sample][0]/fftSize;
-            //float rightSample = outRight[sample][0]/fftSize;
-            
-            float leftSample = multiChannelsFft.getOutput(0,sample);
-            // if(sample == 100) {DBG(leftSample);}
-            
+        int maxOutputLength = buffer.getNumSamples()+hrirLength-1;
+        float leftSample;
+        float* leftChannelDataWrite = buffer.getWritePointer(0);
+
+        for(int sample = 0; sample < maxOutputLength;sample++){
+
+            leftSample = multiChannelsFft.getOutput(0,sample);
+
             if(sample < buffer.getNumSamples()){
                 if(sample<samplesInpreviousOutput){
                     leftChannelDataWrite[sample] = leftSample + leftPreviousOutput[sample];
@@ -447,21 +341,16 @@ void HrtfPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
             }else{
                 leftPreviousOutput.push_back(leftSample);
             }
-            // outLeft[sample][0] = 0;
-            // outRight[sample][0] = 0;
         }
-        multiChannelsFft.clearOutputs();
-        
+        multiChannelsFft.clearOneOutput(0);
+
         if(samplesInpreviousOutput > buffer.getNumSamples()){
             leftPreviousOutput.erase(leftPreviousOutput.begin(),leftPreviousOutput.begin()+buffer.getNumSamples());
         }else if(samplesInpreviousOutput>0){
             leftPreviousOutput.erase(leftPreviousOutput.begin(),leftPreviousOutput.begin()+samplesInpreviousOutput);
         }
-        
         leftChannelVariables.outputRms = buffer.getRMSLevel(0,0,buffer.getNumSamples());
-        
     }
-
 }
 
 //==============================================================================
