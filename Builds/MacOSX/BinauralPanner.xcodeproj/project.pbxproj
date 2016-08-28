@@ -1131,6 +1131,7 @@
 		C85112D73254B513CBC1058C /* setup_X.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = setup_X.h; path = "../../../../juce/modules/juce_audio_formats/codecs/oggvorbis/libvorbis-1.3.2/lib/modes/setup_X.h"; sourceTree = SOURCE_ROOT; };
 		C88DBCC4FCB7CF5D8220C0F9 /* juce_PropertyPanel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_PropertyPanel.h; path = ../../../../juce/modules/juce_gui_basics/properties/juce_PropertyPanel.h; sourceTree = SOURCE_ROOT; };
 		C8CE92C2F2D8144DB1FC7CEE /* juce_ArrayAllocationBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_ArrayAllocationBase.h; path = ../../../../juce/modules/juce_core/containers/juce_ArrayAllocationBase.h; sourceTree = SOURCE_ROOT; };
+		C90D05B61D7293610050C15D /* libsamplerate.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsamplerate.0.dylib; path = ../../../../../../usr/local/Cellar/libsamplerate/0.1.8/lib/libsamplerate.0.dylib; sourceTree = "<group>"; };
 		C93A5D0AA7688AF63598531B /* juce_AudioParameterInt.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_AudioParameterInt.h; path = ../../../../juce/modules/juce_audio_processors/utilities/juce_AudioParameterInt.h; sourceTree = SOURCE_ROOT; };
 		C9C51712961367DF854AE954 /* juce_audio_formats.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_audio_formats.h; path = ../../../../juce/modules/juce_audio_formats/juce_audio_formats.h; sourceTree = SOURCE_ROOT; };
 		CA26A4C23810A75EEF9FA8CB /* juce_WindowsMediaAudioFormat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_WindowsMediaAudioFormat.h; path = ../../../../juce/modules/juce_audio_formats/codecs/juce_WindowsMediaAudioFormat.h; sourceTree = SOURCE_ROOT; };
@@ -2934,6 +2935,7 @@
 		9DFC1D07ABA139210DADB766 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C90D05B61D7293610050C15D /* libsamplerate.0.dylib */,
 				8FC61DC3EC34BBAEEF55533C /* Accelerate.framework */,
 				A050875942851090AEB9DCBC /* AudioToolbox.framework */,
 				9C708D544CE1F22E10017CB9 /* AudioUnit.framework */,
