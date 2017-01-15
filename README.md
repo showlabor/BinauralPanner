@@ -1,6 +1,4 @@
-BinauralPanner
-An simple audio plugin for binaural panning
-This plugin uses the IRCAM 1031 HRIR
+BinauralPanner is a simple audio plugin for binaural panning. This plugin uses the IRCAM 1031 HRIR.
 
 //========================================================================================
 	
