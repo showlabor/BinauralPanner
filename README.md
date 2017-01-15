@@ -1,6 +1,9 @@
 BinauralPanner
+An simple audio plugin for binaural panning
+This plugin uses the IRCAM 1031 HRIR
 
 //========================================================================================
+	
 	Linux
 
 		Binary (Linux VST)
@@ -8,7 +11,8 @@ BinauralPanner
 
 
 	Compile
-		1. install libsamplerate and fftw3(with fftw3f) from your package manager		2. cd to Builds/LinuxMakefile/build
+		1. install libsamplerate and fftw3(with fftw3f) from your package manager		
+		2. cd to Builds/LinuxMakefile/build
 		3. make CONFIG=Release
 //========================================================================================
 
