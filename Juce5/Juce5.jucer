@@ -13,6 +13,15 @@
               jucerVersion="5.1.1">
   <MAINGROUP id="WM5134" name="Juce5">
     <GROUP id="{A81517EC-5629-1009-CFA2-9769BA7A134B}" name="Source">
+      <GROUP id="{FC1557D2-FCD7-1147-710B-7E8495498801}" name="Convolver">
+        <FILE id="vtvFwP" name="a.out" compile="0" resource="0" file="Source/Convolver/a.out"/>
+        <FILE id="ZdVvl5" name="Convolver.cpp" compile="1" resource="0" file="Source/Convolver/Convolver.cpp"/>
+        <FILE id="pzN5vg" name="Convolver.hpp" compile="0" resource="0" file="Source/Convolver/Convolver.hpp"/>
+        <FILE id="LWhkcW" name="Convolver.o" compile="0" resource="0" file="Source/Convolver/Convolver.o"/>
+        <FILE id="o9uo50" name="Convolver.vim" compile="0" resource="0" file="Source/Convolver/Convolver.vim"/>
+        <FILE id="RPiBvS" name="test_convolver.cpp" compile="0" resource="0"
+              file="Source/Convolver/test_convolver.cpp"/>
+      </GROUP>
       <FILE id="Zf7hIA" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="XIK2ls" name="PluginProcessor.h" compile="0" resource="0"
@@ -71,7 +80,8 @@
         <MODULEPATH id="juce_audio_utils" path="../../../juce/modules"/>
       </MODULEPATHS>
     </VS2017>
-    <LINUX_MAKE targetFolder="Builds/LinuxMakefile">
+    <LINUX_MAKE targetFolder="Builds/LinuxMakefile" extraCompilerFlags="-std=c++11"
+                extraLinkerFlags="-lgsl -lm -lgslcblas">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="Juce5"/>
         <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="Juce5"/>

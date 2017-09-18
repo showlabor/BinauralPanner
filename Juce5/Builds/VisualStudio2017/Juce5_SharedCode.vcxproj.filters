@@ -2,6 +2,9 @@
 
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="Juce5\Source\Convolver">
+      <UniqueIdentifier>{3BE74823-851F-0B39-3331-CE0EE49F7D11}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Juce5\Source">
       <UniqueIdentifier>{489FA8DF-FA76-573B-9553-8E5C97DADC8F}</UniqueIdentifier>
     </Filter>
@@ -391,6 +394,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\Convolver\Convolver.cpp">
+      <Filter>Juce5\Source\Convolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Convolver\test_convolver.cpp">
+      <Filter>Juce5\Source\Convolver</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\PluginProcessor.cpp">
       <Filter>Juce5\Source</Filter>
     </ClCompile>
@@ -2226,6 +2235,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\Convolver\Convolver.hpp">
+      <Filter>Juce5\Source\Convolver</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\PluginProcessor.h">
       <Filter>Juce5\Source</Filter>
     </ClInclude>
@@ -4199,6 +4211,15 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\Source\Convolver\a.out">
+      <Filter>Juce5\Source\Convolver</Filter>
+    </None>
+    <None Include="..\..\Source\Convolver\Convolver.o">
+      <Filter>Juce5\Source\Convolver</Filter>
+    </None>
+    <None Include="..\..\Source\Convolver\Convolver.vim">
+      <Filter>Juce5\Source\Convolver</Filter>
+    </None>
     <None Include="C:\JUCE\modules\juce_audio_formats\codecs\flac\Flac Licence.txt">
       <Filter>Juce Modules\juce_audio_formats\codecs\flac</Filter>
     </None>
