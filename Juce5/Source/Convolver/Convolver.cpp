@@ -65,8 +65,7 @@ void Convolver::ComplexMultiply (double* a, const double* b, const size_t channe
 void Convolver::ConvolveFreq(const double* freq, const Convolver::Domain output_domain, const size_t channels, const size_t length){
 	Transform(_buffer,channels,length);
 	ComplexMultiply(_buffer,freq,channels,length);
-	if(output_domain==TIME)
-		Transform(_buffer,channels,length);
+	if(output_domain==TIME)	InverseTransform(_buffer,channels,length);
 }
 
 double* Convolver::operator++ (){
@@ -94,6 +93,7 @@ double* Convolver::end() const{
 	return _end;
 }
 
+//iterator will go back to begin when it reaches the end
 void Convolver::push_back(double value){
 	*_current++ = value;
 	if(_current==_end) _current = _buffer;

@@ -66,5 +66,39 @@ int main(){
 		assert(*ptr++==v);
 	});
 
+	cout<<"Test Convolver"<<endl;
+	c = Convolver(16);
+	double data[] = {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+	double ir[] = {16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1};
+	c.Transform(ir,1,16);
+	std::for_each(data,data+16,[&c](double v){
+		c.push_back(v);
+	});
+	
+	c.ConvolveFreq(ir,Convolver::TIME,1,16);
+	double expect = 16;
+	std::for_each(c.begin(),c.end(),[&expect](double v){
+		double compare = v-expect--;
+		if(compare <0) compare*=-1;
+		assert(compare < 0.00001 );
+	});
+
+	std::for_each(data,data+16,[&c](double v){
+		c.push_back(v);
+	});
+
+	double il_ir[] = {8,1,7,2,6,3,5,3,4,5,3,6,2,7,1,8};
+	c.Transform(il_ir,2,8);
+	c.ConvolveFreq(il_ir,Convolver::TIME,2,8);
+	double il_exp[] = {8,0,7,0,6,0,5,0,4,0,3,0,2,0,1,0};
+	ptr = il_exp;
+	std::for_each(c.begin(),c.end(),[&ptr](double v){
+		double compare = v-*ptr++;
+		if(compare <0) compare*=-1;
+		assert(compare < 0.00001 );
+	});
+	
+	cout<<"All pass"<<endl;
+
 	return 0;
 }
