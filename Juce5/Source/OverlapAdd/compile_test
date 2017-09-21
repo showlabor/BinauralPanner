@@ -1,0 +1,2 @@
+g++ -std=c++11 Buffer.cpp -DTEST;
+./a.out
